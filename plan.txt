@@ -1,0 +1,8 @@
+1. Users can use the app if they register and log into the app
+2. In the app users will be able to add stocks to their portfolio
+3. once they finish the app will display the portfolio as a pie chart.
+    each slice will be determined by the amount of USD you invested in 
+4. Under the pie chart you could see all the assets displayed in a list
+5. The user could add more assets to the portfolio
+6. All the data will be saved for each user
+
