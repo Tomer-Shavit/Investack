@@ -1,15 +1,25 @@
-import { Button, Flex, Heading, Link } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Button,
+  FormHelperText,
+  Link,
+  Text,
+} from "@chakra-ui/react";
 import { Formik } from "formik";
-import React from "react";
-import { InputField } from "../components/InputField";
-import { useLoginMutation } from "../generated/graphql";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { Card } from "../components/Card";
+import { InputField } from "../components/InputField";
+import { useRegisterMutation } from "../generated/graphql";
 import NextLink from "next/link";
 
-const Login = () => {
-  const [login] = useLoginMutation();
+interface registerProps {}
+
+const Register: React.FC<registerProps> = ({}) => {
+  const [register] = useRegisterMutation();
   const router = useRouter();
+  const [password, setPassword] = useState("");
   return (
     <Flex
       background="linear-gradient(rgba(68,46,98,1) 0%, rgba(49,60,92) 100%)"
@@ -20,24 +30,13 @@ const Login = () => {
     >
       <Card>
         <Heading fontSize="2xl" color="textDark" marginBottom={2}>
-          Log-In
+          Sign-Up
         </Heading>
         <Flex>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: "", password: "", confirmedPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await login({
-                variables: { email: values.email, password: values.password },
-              });
-
-              if (response.data.login.errors) {
-                setErrors({
-                  [response.data.login.errors[0].field]:
-                    response.data.login.errors[0].error,
-                });
-              } else if (response.data.login.user) {
-                router.push("/");
-              }
+              console.log(values);
             }}
           >
             {({ isSubmitting, handleSubmit }) => (
@@ -61,6 +60,13 @@ const Login = () => {
                     placeholder="Password"
                     type="password"
                   ></InputField>
+                  <InputField
+                    name="confirmedPassword"
+                    label="Confirm Password"
+                    placeholder="Confirm Password"
+                    type="password"
+                  ></InputField>
+
                   <Button
                     mt={2}
                     maxW="120px"
@@ -72,8 +78,8 @@ const Login = () => {
                     Submit
                   </Button>
                   <Flex mt={3}>
-                    <NextLink href="/register">
-                      <Link color="borderDark">Don't have an account yet?</Link>
+                    <NextLink href="/login">
+                      <Link color="borderDark"> Already have a user?</Link>
                     </NextLink>
                   </Flex>
                 </Flex>
@@ -86,4 +92,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
