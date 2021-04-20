@@ -12,10 +12,12 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({
   colors: {
-    bgDark1: "#100C18",
+    bgDark1: "#1b1a1e",
     bgDark2: "#27262C",
     borderDark: "#5e5c64",
+    hoverDark: "#353547",
     mainDark: "#5469D4",
+    mainDark2: "#6172c7",
     accentDark: "#1FC7D4",
     textDark: "#FFF",
     errorDark: "#e5383b",

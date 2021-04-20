@@ -20,7 +20,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = null;
   } else if (!data.me?.user?.email && !loading) {
     body = (
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" position="fixed">
         <NextLink href="/register">
           <Link color="textDark" paddingRight={3}>
             Sign-Up

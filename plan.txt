@@ -6,3 +6,11 @@
 5. The user could add more assets to the portfolio
 6. All the data will be saved for each user
 
+
+What panels do I want for this app.
+- portfolio:
+    - stocks
+    - crypto
+- news
+- notes
+- settings 
