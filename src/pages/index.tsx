@@ -6,7 +6,12 @@ const Index = () => {
   return (
     <Box>
       <PageLayout>
-        <Flex flexDirection="column" bgColor="bgDark1" padding={5}>
+        <Flex
+          flexDirection="column"
+          bgColor="bgDark1"
+          height="calc(100vh-64px)"
+          padding={5}
+        >
           <Heading color="textDark">My Portfolio</Heading>
         </Flex>
       </PageLayout>

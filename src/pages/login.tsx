@@ -73,7 +73,9 @@ const Login = () => {
                   </Button>
                   <Flex mt={3}>
                     <NextLink href="/register">
-                      <Link color="borderDark">Don't have an account yet?</Link>
+                      <Link color="borderDark2">
+                        Don't have an account yet?
+                      </Link>
                     </NextLink>
                   </Flex>
                 </Flex>

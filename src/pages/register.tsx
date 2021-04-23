@@ -79,7 +79,7 @@ const Register: React.FC<registerProps> = ({}) => {
                   </Button>
                   <Flex mt={3}>
                     <NextLink href="/login">
-                      <Link color="borderDark"> Already have an account?</Link>
+                      <Link color="borderDark2"> Already have an account?</Link>
                     </NextLink>
                   </Flex>
                 </Flex>

@@ -5,6 +5,9 @@ import { BsFillGearFill } from "react-icons/bs";
 import { CgNotes } from "react-icons/cg";
 import { FaBell } from "react-icons/fa";
 import { FaCaretDown } from "react-icons/fa";
+import { FaCaretUp } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 
 export const ICONS_TO_CLASSES = {
   portfolio: HiChartPie,
@@ -14,4 +17,7 @@ export const ICONS_TO_CLASSES = {
   notes: CgNotes,
   news: FaBell,
   down: FaCaretDown,
+  up: FaCaretUp,
+  home: FaHome,
+  locked: FaLock,
 };

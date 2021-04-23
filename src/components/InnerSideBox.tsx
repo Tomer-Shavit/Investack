@@ -1,42 +1,40 @@
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Flex, Icon, Text } from "@chakra-ui/react";
+import React from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-
-interface SideBoxProps {
+interface InnerSideBoxProps {
   name: string;
 }
 
-export const SideBox: React.FC<SideBoxProps> = ({ name }) => {
+export const InnerSideBox: React.FC<InnerSideBoxProps> = ({ name }) => {
   const router = useRouter();
-  const isHome = name === "home" && router.pathname === "/";
-
   return (
-    <NextLink href={name !== "home" ? `/${name}` : "/"}>
+    <NextLink href={`/${name}`}>
       <Flex
-        paddingLeft={5}
-        paddingRight={5}
+        paddingLeft={7}
+        paddingRight={7}
         alignItems="center"
         cursor="pointer"
         _hover={{ backgroundColor: "hoverDark" }}
-        style={{ transition: "background-color 0.05s ease-in" }}
+        style={{ transition: "background-color 0.1s ease-in" }}
+        backgroundColor="bgDark1"
+        height="48px"
+        width="100%"
         boxShadow={
-          name === router.pathname.slice(1) || isHome
+          name === router.pathname.slice(1)
             ? `#1FC7D4 4px 0px 0px inset`
             : undefined
         }
-        height="48px"
-        width="100%"
       >
         <Flex alignItems="center">
           <Icon
             as={ICONS_TO_CLASSES[name]}
             color="mainDark2"
-            marginRight={2}
-            fontSize="xl"
+            marginRight={3}
+            fontSize="lg"
           ></Icon>
-          <Text color="mainDark2" fontSize="xl">
+          <Text color="mainDark2" fontSize="lg">
             {name.charAt(0).toUpperCase() + name.slice(1)}
           </Text>
         </Flex>

@@ -14,7 +14,8 @@ const theme = extendTheme({
   colors: {
     bgDark1: "#1b1a1e",
     bgDark2: "#27262C",
-    borderDark: "#5e5c64",
+    borderDark: "#37373b",
+    borderDark2: "#56565e",
     hoverDark: "#353547",
     mainDark: "#5469D4",
     mainDark2: "#6172c7",

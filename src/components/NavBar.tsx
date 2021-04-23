@@ -20,7 +20,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = null;
   } else if (!data.me?.user?.email && !loading) {
     body = (
-      <Flex justifyContent="space-between" position="fixed">
+      <Flex justifyContent="space-between">
         <NextLink href="/register">
           <Link color="textDark" paddingRight={3}>
             Sign-Up
@@ -58,12 +58,17 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       h="64px"
       paddingLeft={8}
       paddingRight={8}
+      position="fixed"
+      width="100%"
+      zIndex="10"
     >
       <Flex alignItems="center" justifyContent="space-between" width="100%">
         <Flex p={3}>
-          <Text color="textDark" fontSize="2xl">
-            Investack
-          </Text>
+          <NextLink href="/">
+            <Text color="textDark" fontSize="3xl" cursor="pointer">
+              Investack
+            </Text>
+          </NextLink>
         </Flex>
         {body}
       </Flex>
