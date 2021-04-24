@@ -13,6 +13,7 @@ import { Card } from "../components/Card";
 import { InputField } from "../components/InputField";
 import { useRegisterMutation } from "../generated/graphql";
 import NextLink from "next/link";
+import { errorsArrayToMap } from "../utils/errorsArrayToMap";
 
 interface registerProps {}
 
@@ -36,7 +37,16 @@ const Register: React.FC<registerProps> = ({}) => {
           <Formik
             initialValues={{ email: "", password: "", confirmedPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
-              console.log(values);
+              const response = await register({
+                variables: { email: values.email, password: values.password },
+              });
+              console.log("response: ", response);
+              if (response.data.register.errors) {
+                setErrors(errorsArrayToMap(response.data.register.errors));
+              }
+              if (response.data.register.user) {
+                router.push("/");
+              }
             }}
           >
             {({ isSubmitting, handleSubmit }) => (

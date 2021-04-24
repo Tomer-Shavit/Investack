@@ -2,7 +2,6 @@ import { Flex, Heading } from "@chakra-ui/react";
 import React from "react";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
-import { useMeQuery } from "../generated/graphql";
 
 interface StocksProps {}
 

@@ -2,7 +2,7 @@ import { Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Formik } from "formik";
 import React from "react";
 import { InputField } from "../components/InputField";
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, useLoginMutation } from "../generated/graphql";
 import { useRouter } from "next/router";
 import { Card } from "../components/Card";
 import NextLink from "next/link";
@@ -28,6 +28,7 @@ const Login = () => {
             onSubmit={async (values, { setErrors }) => {
               const response = await login({
                 variables: { email: values.email, password: values.password },
+                refetchQueries: [{ query: MeDocument }],
               });
 
               if (response.data.login.errors) {

@@ -18,7 +18,7 @@ export const PageLayout: React.FC<PageContainerProps> = ({ children }) => {
           overflow="hidden"
           marginTop="64px"
           height="calc(100vh - 64px)"
-          overflowY="scroll"
+          overflowY="auto"
           css={{
             "&::-webkit-scrollbar": {
               width: "8px",

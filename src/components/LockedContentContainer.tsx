@@ -17,8 +17,12 @@ export const LockedContentContainer: React.FC<LockedContentContainerProps> = ({
   } else if (!data.me && !loading) {
     body = <LockedContent></LockedContent>;
   } else if (data.me) {
-    body = { children };
+    body = children;
   }
 
-  return <Flex flexDirection="column">{body}</Flex>;
+  return (
+    <Flex flexDirection="column" width="100%">
+      {body}
+    </Flex>
+  );
 };

@@ -11,6 +11,7 @@ export const Loader: React.FC<LoaderProps> = ({}) => {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      height="50%"
     >
       <div className={styles.loader}></div>
     </Flex>
