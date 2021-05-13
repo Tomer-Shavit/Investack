@@ -1,5 +1,5 @@
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Flex, Icon, Text } from "@chakra-ui/react";
+import React from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import NextLink from "next/link";
 import { useRouter } from "next/router";

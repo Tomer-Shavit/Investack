@@ -1,0 +1,3 @@
+mutation AddStocksToPortfolio($stocksInput: [stocksInput!]!) {
+  addStocks(stocksInput: $stocksInput)
+}

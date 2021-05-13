@@ -3,9 +3,10 @@ import React from "react";
 
 interface CardProps {
   size?: string;
+  pointer?: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({ children, size }) => {
+export const Card: React.FC<CardProps> = ({ children, size, pointer }) => {
   return (
     <Flex
       flexDir="column"
@@ -14,6 +15,7 @@ export const Card: React.FC<CardProps> = ({ children, size }) => {
       width={size === "xl" ? "100%" : "30%"}
       justifyContent="center"
       alignItems="center"
+      cursor={pointer ? "pointer" : undefined}
       p={4}
     >
       {children}

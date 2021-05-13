@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Card } from "../components/Card";
 import { InputField } from "../components/InputField";
-import { useRegisterMutation } from "../generated/graphql";
+import { MeDocument, useRegisterMutation } from "../generated/graphql";
 import NextLink from "next/link";
 import { errorsArrayToMap } from "../utils/errorsArrayToMap";
 
@@ -39,6 +39,7 @@ const Register: React.FC<registerProps> = ({}) => {
             onSubmit={async (values, { setErrors }) => {
               const response = await register({
                 variables: { email: values.email, password: values.password },
+                refetchQueries: [{ query: MeDocument }],
               });
               console.log("response: ", response);
               if (response.data.register.errors) {

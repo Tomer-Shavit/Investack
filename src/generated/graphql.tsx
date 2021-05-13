@@ -14,6 +14,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type Crypto = {
+  __typename?: 'Crypto';
+  name: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
 export type FieldErrors = {
   __typename?: 'FieldErrors';
   field: Scalars['String'];
@@ -26,6 +32,8 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
+  addStocks: Scalars['Boolean'];
+  addCrypto: Scalars['Boolean'];
 };
 
 
@@ -43,16 +51,46 @@ export type MutationDeleteUserArgs = {
   id: Scalars['Float'];
 };
 
+
+export type MutationAddStocksArgs = {
+  stocksInput: Array<StocksInput>;
+};
+
+
+export type MutationAddCryptoArgs = {
+  cryptoInput: Array<CryptoInput>;
+};
+
+export type Portfolio = {
+  __typename?: 'Portfolio';
+  id: Scalars['Float'];
+  userId: Scalars['Float'];
+  stocks: Array<Stock>;
+  crypto: Array<Crypto>;
+  user: User;
+  value: Scalars['Float'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   users?: Maybe<Array<User>>;
   me?: Maybe<UserResponse>;
+  myPortfolio?: Maybe<Portfolio>;
+};
+
+export type Stock = {
+  __typename?: 'Stock';
+  symbol: Scalars['String'];
+  shares: Scalars['Float'];
 };
 
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
   email: Scalars['String'];
+  portfolio?: Maybe<Portfolio>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -67,6 +105,36 @@ export type UserResponse = {
   user?: Maybe<User>;
   errors?: Maybe<Array<FieldErrors>>;
 };
+
+export type CryptoInput = {
+  name: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
+export type StocksInput = {
+  symbol: Scalars['String'];
+  shares: Scalars['Float'];
+};
+
+export type AddCryptoToPortfolioMutationVariables = Exact<{
+  cryptoInput: Array<CryptoInput> | CryptoInput;
+}>;
+
+
+export type AddCryptoToPortfolioMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addCrypto'>
+);
+
+export type AddStocksToPortfolioMutationVariables = Exact<{
+  stocksInput: Array<StocksInput> | StocksInput;
+}>;
+
+
+export type AddStocksToPortfolioMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addStocks'>
+);
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -125,12 +193,85 @@ export type MeQuery = (
     { __typename?: 'UserResponse' }
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'email'>
+      & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt'>
+      & { portfolio?: Maybe<(
+        { __typename?: 'Portfolio' }
+        & Pick<Portfolio, 'id'>
+        & { stocks: Array<(
+          { __typename?: 'Stock' }
+          & Pick<Stock, 'symbol' | 'shares'>
+        )>, crypto: Array<(
+          { __typename?: 'Crypto' }
+          & Pick<Crypto, 'name' | 'amount'>
+        )> }
+      )> }
     )> }
   )> }
 );
 
 
+export const AddCryptoToPortfolioDocument = gql`
+    mutation AddCryptoToPortfolio($cryptoInput: [cryptoInput!]!) {
+  addCrypto(cryptoInput: $cryptoInput)
+}
+    `;
+export type AddCryptoToPortfolioMutationFn = Apollo.MutationFunction<AddCryptoToPortfolioMutation, AddCryptoToPortfolioMutationVariables>;
+
+/**
+ * __useAddCryptoToPortfolioMutation__
+ *
+ * To run a mutation, you first call `useAddCryptoToPortfolioMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCryptoToPortfolioMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCryptoToPortfolioMutation, { data, loading, error }] = useAddCryptoToPortfolioMutation({
+ *   variables: {
+ *      cryptoInput: // value for 'cryptoInput'
+ *   },
+ * });
+ */
+export function useAddCryptoToPortfolioMutation(baseOptions?: Apollo.MutationHookOptions<AddCryptoToPortfolioMutation, AddCryptoToPortfolioMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCryptoToPortfolioMutation, AddCryptoToPortfolioMutationVariables>(AddCryptoToPortfolioDocument, options);
+      }
+export type AddCryptoToPortfolioMutationHookResult = ReturnType<typeof useAddCryptoToPortfolioMutation>;
+export type AddCryptoToPortfolioMutationResult = Apollo.MutationResult<AddCryptoToPortfolioMutation>;
+export type AddCryptoToPortfolioMutationOptions = Apollo.BaseMutationOptions<AddCryptoToPortfolioMutation, AddCryptoToPortfolioMutationVariables>;
+export const AddStocksToPortfolioDocument = gql`
+    mutation AddStocksToPortfolio($stocksInput: [stocksInput!]!) {
+  addStocks(stocksInput: $stocksInput)
+}
+    `;
+export type AddStocksToPortfolioMutationFn = Apollo.MutationFunction<AddStocksToPortfolioMutation, AddStocksToPortfolioMutationVariables>;
+
+/**
+ * __useAddStocksToPortfolioMutation__
+ *
+ * To run a mutation, you first call `useAddStocksToPortfolioMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddStocksToPortfolioMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addStocksToPortfolioMutation, { data, loading, error }] = useAddStocksToPortfolioMutation({
+ *   variables: {
+ *      stocksInput: // value for 'stocksInput'
+ *   },
+ * });
+ */
+export function useAddStocksToPortfolioMutation(baseOptions?: Apollo.MutationHookOptions<AddStocksToPortfolioMutation, AddStocksToPortfolioMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddStocksToPortfolioMutation, AddStocksToPortfolioMutationVariables>(AddStocksToPortfolioDocument, options);
+      }
+export type AddStocksToPortfolioMutationHookResult = ReturnType<typeof useAddStocksToPortfolioMutation>;
+export type AddStocksToPortfolioMutationResult = Apollo.MutationResult<AddStocksToPortfolioMutation>;
+export type AddStocksToPortfolioMutationOptions = Apollo.BaseMutationOptions<AddStocksToPortfolioMutation, AddStocksToPortfolioMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(userInput: {email: $email, password: $password}) {
@@ -253,6 +394,19 @@ export const MeDocument = gql`
     user {
       id
       email
+      portfolio {
+        id
+        stocks {
+          symbol
+          shares
+        }
+        crypto {
+          name
+          amount
+        }
+      }
+      createdAt
+      updatedAt
     }
   }
 }

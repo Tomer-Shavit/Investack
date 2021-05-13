@@ -3,6 +3,19 @@ query Me {
     user {
       id
       email
+      portfolio {
+        id
+        stocks {
+          symbol
+          shares
+        }
+        crypto {
+          name
+          amount
+        }
+      }
+      createdAt
+      updatedAt
     }
   }
 }
