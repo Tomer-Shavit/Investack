@@ -4,9 +4,15 @@ import React from "react";
 interface CardProps {
   size?: string;
   pointer?: boolean;
+  onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ children, size, pointer }) => {
+export const Card: React.FC<CardProps> = ({
+  children,
+  size,
+  pointer,
+  onClick,
+}) => {
   return (
     <Flex
       flexDir="column"
@@ -17,6 +23,7 @@ export const Card: React.FC<CardProps> = ({ children, size, pointer }) => {
       alignItems="center"
       cursor={pointer ? "pointer" : undefined}
       p={4}
+      onClick={onClick}
     >
       {children}
     </Flex>

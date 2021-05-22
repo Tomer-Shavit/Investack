@@ -10,7 +10,7 @@ import { Formik } from "formik";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Card } from "../components/Card";
-import { InputField } from "../components/InputField";
+import { InputFormField } from "../components/InputFormField";
 import { MeDocument, useRegisterMutation } from "../generated/graphql";
 import NextLink from "next/link";
 import { errorsArrayToMap } from "../utils/errorsArrayToMap";
@@ -58,25 +58,25 @@ const Register: React.FC<registerProps> = ({}) => {
                   alignItems="center"
                   width="100%"
                 >
-                  <InputField
+                  <InputFormField
                     name="email"
                     label="Email"
                     placeholder="Email"
                     type="text"
                     width="320px"
-                  ></InputField>
-                  <InputField
+                  ></InputFormField>
+                  <InputFormField
                     name="password"
                     label="Password"
                     placeholder="Password"
                     type="password"
-                  ></InputField>
-                  <InputField
+                  ></InputFormField>
+                  <InputFormField
                     name="confirmedPassword"
                     label="Confirm Password"
                     placeholder="Confirm Password"
                     type="password"
-                  ></InputField>
+                  ></InputFormField>
 
                   <Button
                     mt={2}
@@ -86,7 +86,7 @@ const Register: React.FC<registerProps> = ({}) => {
                     type="submit"
                     color="textDark"
                   >
-                    Submit
+                    Sign Up
                   </Button>
                   <Flex mt={3}>
                     <NextLink href="/login">

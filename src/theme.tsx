@@ -21,6 +21,7 @@ const theme = extendTheme({
     mainDark2: "#6172c7",
     accentDark: "#1FC7D4",
     textDark: "#FFF",
+    textDark2: "#73737c",
     errorDark: "#e5383b",
   },
   fonts,

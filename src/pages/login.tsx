@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Formik } from "formik";
 import React from "react";
-import { InputField } from "../components/InputField";
+import { InputFormField } from "../components/InputFormField";
 import { MeDocument, useLoginMutation } from "../generated/graphql";
 import { useRouter } from "next/router";
 import { Card } from "../components/Card";
@@ -49,19 +49,19 @@ const Login = () => {
                   alignItems="center"
                   width="100%"
                 >
-                  <InputField
+                  <InputFormField
                     name="email"
                     label="Email"
                     placeholder="Email"
                     type="text"
                     width="320px"
-                  ></InputField>
-                  <InputField
+                  ></InputFormField>
+                  <InputFormField
                     name="password"
                     label="Password"
                     placeholder="Password"
                     type="password"
-                  ></InputField>
+                  ></InputFormField>
                   <Button
                     mt={2}
                     maxW="120px"
@@ -70,7 +70,7 @@ const Login = () => {
                     type="submit"
                     color="textDark"
                   >
-                    Submit
+                    Login
                   </Button>
                   <Flex mt={3}>
                     <NextLink href="/register">

@@ -13,7 +13,7 @@ export const PageLayout: React.FC<PageContainerProps> = ({ children }) => {
         <SidePanel />
         <Flex
           marginLeft="240px"
-          bgColor="bgDark1"
+          bgGradient="linear(to-b, #2f2d33, #1B1A1E)"
           width="calc(100% - 240px)"
           overflow="hidden"
           marginTop="64px"
