@@ -18,10 +18,12 @@
     "formik": "^2.2.6",
     "framer-motion": "^2.9.4",
     "graphql": "^15.5.0",
+    "lodash": "^4.17.21",
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-icons": "^4.2.0"
+    "react-icons": "^4.2.0",
+    "react-waypoint": "^10.1.0"
   },
   "license": "MIT",
   "devDependencies": {

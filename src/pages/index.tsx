@@ -6,7 +6,7 @@ import { useMeQuery } from "../generated/graphql";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import { useRouter } from "next/router";
 
-// אני לא מעשן עד ה26.5.21
+// אני לא מעשן עד ה28.5.21
 
 const Index = () => {
   const { data, loading } = useMeQuery();

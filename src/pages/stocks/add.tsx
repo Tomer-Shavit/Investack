@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "../../components/inputField";
 import { LockedContentContainer } from "../../components/LockedContentContainer";
 import { PageLayout } from "../../components/PageLayout";
@@ -11,6 +11,12 @@ interface sGettingStartedProps {}
 
 const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
+  const [stockSearch, setStockSearch] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStockSearch(e.target.value);
+  };
+
   return (
     <PageLayout>
       <LockedContentContainer>
@@ -33,7 +39,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             <Box width="40%" marginRight="auto">
               <InputField
                 color="textDark"
-                handleChange={(e) => {}}
+                onChange={handleChange}
                 placeholder="E.g. AAPL"
                 type="text"
               ></InputField>
@@ -52,7 +58,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             </Button>
           </Flex>
           <Flex flexDir="column" width="80%">
-            <StockBoxesContainer></StockBoxesContainer>
+            <StockBoxesContainer search={stockSearch}></StockBoxesContainer>
           </Flex>
         </Flex>
       </LockedContentContainer>
