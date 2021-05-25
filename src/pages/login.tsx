@@ -54,7 +54,6 @@ const Login = () => {
                     label="Email"
                     placeholder="Email"
                     type="text"
-                    width="320px"
                   ></InputFormField>
                   <InputFormField
                     name="password"

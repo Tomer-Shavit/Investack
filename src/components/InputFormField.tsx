@@ -15,12 +15,13 @@ type InputFormFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   placeholder?: string;
   size?: string;
   width?: string;
+  mBot?: string;
 };
 
 export const InputFormField: React.FC<InputFormFieldProps> = (props) => {
   const [field, { error }] = useField(props);
   return (
-    <Box width="100%" marginBottom={3}>
+    <Box width="100%" marginBottom={props.mBot ? props.mBot : undefined}>
       <FormControl isInvalid={!!error}>
         <FormLabel htmlFor={field.name} color="textDark">
           {props.label}
@@ -39,7 +40,9 @@ export const InputFormField: React.FC<InputFormFieldProps> = (props) => {
         />
         {error ? (
           <FormErrorMessage color="errorDark">{error}</FormErrorMessage>
-        ) : null}
+        ) : (
+          <Box height="28.8px"></Box>
+        )}
       </FormControl>
     </Box>
   );

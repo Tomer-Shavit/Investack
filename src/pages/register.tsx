@@ -63,7 +63,6 @@ const Register: React.FC<registerProps> = ({}) => {
                     label="Email"
                     placeholder="Email"
                     type="text"
-                    width="320px"
                   ></InputFormField>
                   <InputFormField
                     name="password"

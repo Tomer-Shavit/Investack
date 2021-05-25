@@ -17,7 +17,6 @@ export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
 }) => {
   const { allStocks } = useContext(StocksContext);
   const [delayedSearch, setDelayedSearch] = useState("");
-  const [colorBool, setColorBool] = useState(true);
   const [counter, setCounter] = useState(50);
   const [shownStocks, setShownStocks] = useState(
     stocksPagination(allStocks, 0, 50)
