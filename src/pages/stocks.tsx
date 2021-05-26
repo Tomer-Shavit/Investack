@@ -1,4 +1,5 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
@@ -6,6 +7,7 @@ import { PageLayout } from "../components/PageLayout";
 interface StocksProps {}
 
 const stocks: React.FC<StocksProps> = ({}) => {
+  const router = useRouter();
   return (
     <PageLayout>
       <LockedContentContainer>
@@ -13,6 +15,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
           <Heading fontSize="2xl" color="textDark">
             Stocks
           </Heading>
+          <Button onClick={() => router.push("stocks/add")}>Add Stocks</Button>
         </Flex>
       </LockedContentContainer>
     </PageLayout>

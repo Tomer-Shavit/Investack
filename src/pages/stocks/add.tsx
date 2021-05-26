@@ -1,17 +1,22 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { InputField } from "../../components/inputField";
 import { LockedContentContainer } from "../../components/LockedContentContainer";
 import { PageLayout } from "../../components/PageLayout";
 import { StockBoxesContainer } from "../../components/StockBoxesContainer";
+import { StocksContext } from "../../context/StocksContext";
+import { useAddStocksToPortfolioMutation } from "../../generated/graphql";
 
 interface sGettingStartedProps {}
 
 const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
   const [stockSearch, setStockSearch] = useState<string | null>(null);
+  const [addStocks] = useAddStocksToPortfolioMutation();
+  const { addedStocks, stocksValue, resetAddedStocks } =
+    useContext(StocksContext);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStockSearch(e.target.value);
@@ -31,9 +36,9 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             whiteSpace="pre-wrap"
             textAlign="center"
           >
-            To add stocks to your portfolio, search the stock symbol/name, click
-            on the plus and fill in the details.{"\n"}When you're done adding
-            all your stocks, click Save.
+            To add stocks to your portfolio, search the stock symbol, click on
+            the plus and fill in the details.{"\n"}When you're done adding all
+            your stocks, click Save.
           </Text>
           <Flex width="80%" marginBottom={5} alignItems="center">
             <Box width="40%" marginRight="auto">
@@ -49,9 +54,14 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               color="textDark"
               p={4}
               width="6rem"
-              onClick={() => {
-                //Need to save all stocks in the database
-                router.push("/stocks");
+              onClick={async () => {
+                try {
+                  await addStocks({ variables: { stocksInput: addedStocks } });
+                  resetAddedStocks();
+                  router.push("/stocks");
+                } catch (e) {
+                  console.error(e);
+                }
               }}
             >
               Save

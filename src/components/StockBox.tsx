@@ -24,10 +24,12 @@ interface StockBoxProps {
 }
 
 export const StockBox: React.FC<StockBoxProps> = (props) => {
-  const { addedStocks, addToAddedStocks } = useContext(StocksContext);
+  const { addToAddedStocks } = useContext(StocksContext);
   const toast = useToast();
   const priceName = "price" + `${props.symbol}`;
   const sharesName = "shares" + `${props.symbol}`;
+  const [add, setAdd] = useState(0);
+  let err = false;
   const [error, setError] = useState(false);
   const isInitialMount = useRef(true);
   const reg = /^\d+$/;
@@ -37,24 +39,26 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else {
-      if (!error) {
-        toast({
-          title: `${props.symbol} was added to your portfolio.`,
-          description: `Don't forget to save.`,
-          status: "success",
-          duration: 4000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Something went wrong.",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
-      }
+      setTimeout(() => {
+        if (err && add > 0) {
+          toast({
+            title: "Something went wrong.",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
+        } else if (!err && add === 0) {
+          toast({
+            title: `${props.symbol} was added to your portfolio.`,
+            description: `Don't forget to save.`,
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+          });
+        }
+      }, 500);
     }
-  }, [error]);
+  }, [add]);
 
   return (
     <AccordionItem backgroundColor={props.bgColor} borderColor="borderDark2">
@@ -74,7 +78,8 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
           initialValues={{ [sharesName]: 0, [priceName]: 0 }}
           onSubmit={(values, { setErrors }) => {
             if (!String(values[sharesName]).match(reg) || !values[sharesName]) {
-              setError(true);
+              err = true;
+              console.log("errorFN: ", error);
               setErrors({
                 [sharesName]: "Invalid input.",
               });
@@ -87,9 +92,8 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
                 [priceName]: "Invalid input.",
               });
             } else {
-              setError(false);
-              console.log("values: ", values);
-
+              err = false;
+              setAdd(0);
               addToAddedStocks(
                 props.symbol,
                 values[sharesName],
@@ -112,13 +116,13 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
                 >
                   <InputFormField
                     name={sharesName}
-                    placeholder="E.g. 5"
+                    placeholder="Number of shares"
                     label="Shares"
                     type="number"
                   ></InputFormField>
                   <InputFormField
                     name={priceName}
-                    placeholder="E.g. 63.75"
+                    placeholder="Price per share"
                     label="Price"
                     type="number"
                   ></InputFormField>
@@ -129,6 +133,7 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
                     type="submit"
                     color="textDark"
                     width="60%"
+                    onClick={() => setAdd(add + 1)}
                   >
                     Add
                   </Button>
