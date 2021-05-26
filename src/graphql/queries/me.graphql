@@ -4,15 +4,7 @@ query Me {
       id
       email
       portfolio {
-        id
-        stocks {
-          symbol
-          shares
-        }
-        crypto {
-          name
-          amount
-        }
+        ...PortfolioSnippet
       }
       createdAt
       updatedAt

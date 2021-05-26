@@ -7,7 +7,10 @@ import { LockedContentContainer } from "../../components/LockedContentContainer"
 import { PageLayout } from "../../components/PageLayout";
 import { StockBoxesContainer } from "../../components/StockBoxesContainer";
 import { StocksContext } from "../../context/StocksContext";
-import { useAddStocksToPortfolioMutation } from "../../generated/graphql";
+import {
+  useAddStocksToPortfolioMutation,
+  useEditValueMutation,
+} from "../../generated/graphql";
 
 interface sGettingStartedProps {}
 
@@ -15,6 +18,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
   const [stockSearch, setStockSearch] = useState<string | null>(null);
   const [addStocks] = useAddStocksToPortfolioMutation();
+  const [editValue] = useEditValueMutation();
   const { addedStocks, stocksValue, resetAddedStocks } =
     useContext(StocksContext);
 
@@ -57,6 +61,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               onClick={async () => {
                 try {
                   await addStocks({ variables: { stocksInput: addedStocks } });
+                  await editValue({ variables: { amount: stocksValue } });
                   resetAddedStocks();
                   router.push("/stocks");
                 } catch (e) {

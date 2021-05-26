@@ -34,6 +34,7 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   addStocks: Scalars['Boolean'];
   addCrypto: Scalars['Boolean'];
+  editValue: Scalars['Boolean'];
 };
 
 
@@ -59,6 +60,11 @@ export type MutationAddStocksArgs = {
 
 export type MutationAddCryptoArgs = {
   cryptoInput: Array<CryptoInput>;
+};
+
+
+export type MutationEditValueArgs = {
+  amount: Scalars['Float'];
 };
 
 export type Portfolio = {
@@ -115,6 +121,28 @@ export type StocksInput = {
   symbol: Scalars['String'];
   shares: Scalars['Float'];
 };
+
+export type PortfolioSnippetFragment = (
+  { __typename?: 'Portfolio' }
+  & Pick<Portfolio, 'id' | 'userId' | 'value'>
+  & { stocks: Array<(
+    { __typename?: 'Stock' }
+    & Pick<Stock, 'symbol' | 'shares'>
+  )>, crypto: Array<(
+    { __typename?: 'Crypto' }
+    & Pick<Crypto, 'name' | 'amount'>
+  )> }
+);
+
+export type EditValueMutationVariables = Exact<{
+  amount: Scalars['Float'];
+}>;
+
+
+export type EditValueMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'editValue'>
+);
 
 export type AddCryptoToPortfolioMutationVariables = Exact<{
   cryptoInput: Array<CryptoInput> | CryptoInput;
@@ -196,20 +224,69 @@ export type MeQuery = (
       & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt'>
       & { portfolio?: Maybe<(
         { __typename?: 'Portfolio' }
-        & Pick<Portfolio, 'id'>
-        & { stocks: Array<(
-          { __typename?: 'Stock' }
-          & Pick<Stock, 'symbol' | 'shares'>
-        )>, crypto: Array<(
-          { __typename?: 'Crypto' }
-          & Pick<Crypto, 'name' | 'amount'>
-        )> }
+        & PortfolioSnippetFragment
       )> }
     )> }
   )> }
 );
 
+export type MyPortfolioQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type MyPortfolioQuery = (
+  { __typename?: 'Query' }
+  & { myPortfolio?: Maybe<(
+    { __typename?: 'Portfolio' }
+    & PortfolioSnippetFragment
+  )> }
+);
+
+export const PortfolioSnippetFragmentDoc = gql`
+    fragment PortfolioSnippet on Portfolio {
+  id
+  userId
+  value
+  stocks {
+    symbol
+    shares
+  }
+  crypto {
+    name
+    amount
+  }
+}
+    `;
+export const EditValueDocument = gql`
+    mutation EditValue($amount: Float!) {
+  editValue(amount: $amount)
+}
+    `;
+export type EditValueMutationFn = Apollo.MutationFunction<EditValueMutation, EditValueMutationVariables>;
+
+/**
+ * __useEditValueMutation__
+ *
+ * To run a mutation, you first call `useEditValueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditValueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editValueMutation, { data, loading, error }] = useEditValueMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useEditValueMutation(baseOptions?: Apollo.MutationHookOptions<EditValueMutation, EditValueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditValueMutation, EditValueMutationVariables>(EditValueDocument, options);
+      }
+export type EditValueMutationHookResult = ReturnType<typeof useEditValueMutation>;
+export type EditValueMutationResult = Apollo.MutationResult<EditValueMutation>;
+export type EditValueMutationOptions = Apollo.BaseMutationOptions<EditValueMutation, EditValueMutationVariables>;
 export const AddCryptoToPortfolioDocument = gql`
     mutation AddCryptoToPortfolio($cryptoInput: [cryptoInput!]!) {
   addCrypto(cryptoInput: $cryptoInput)
@@ -395,22 +472,14 @@ export const MeDocument = gql`
       id
       email
       portfolio {
-        id
-        stocks {
-          symbol
-          shares
-        }
-        crypto {
-          name
-          amount
-        }
+        ...PortfolioSnippet
       }
       createdAt
       updatedAt
     }
   }
 }
-    `;
+    ${PortfolioSnippetFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -438,3 +507,37 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MyPortfolioDocument = gql`
+    query MyPortfolio {
+  myPortfolio {
+    ...PortfolioSnippet
+  }
+}
+    ${PortfolioSnippetFragmentDoc}`;
+
+/**
+ * __useMyPortfolioQuery__
+ *
+ * To run a query within a React component, call `useMyPortfolioQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyPortfolioQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyPortfolioQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyPortfolioQuery(baseOptions?: Apollo.QueryHookOptions<MyPortfolioQuery, MyPortfolioQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyPortfolioQuery, MyPortfolioQueryVariables>(MyPortfolioDocument, options);
+      }
+export function useMyPortfolioLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyPortfolioQuery, MyPortfolioQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyPortfolioQuery, MyPortfolioQueryVariables>(MyPortfolioDocument, options);
+        }
+export type MyPortfolioQueryHookResult = ReturnType<typeof useMyPortfolioQuery>;
+export type MyPortfolioLazyQueryHookResult = ReturnType<typeof useMyPortfolioLazyQuery>;
+export type MyPortfolioQueryResult = Apollo.QueryResult<MyPortfolioQuery, MyPortfolioQueryVariables>;

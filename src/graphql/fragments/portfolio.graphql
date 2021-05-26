@@ -1,0 +1,13 @@
+fragment PortfolioSnippet on Portfolio {
+  id
+  userId
+  value
+  stocks {
+    symbol
+    shares
+  }
+  crypto {
+    name
+    amount
+  }
+}
