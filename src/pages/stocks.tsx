@@ -16,16 +16,14 @@ const stocks: React.FC<StocksProps> = ({}) => {
   let body;
 
   useEffect(() => {
-    if (!loading && data.myPortfolio?.stocks) {
-      const myStocks = stocksToString(data?.myPortfolio?.stocks);
-      axios
-        .get(
-          `https://api.twelvedata.com/quote?symbol=${myStocks}&apikey=${process.env.API_KEY}`
-        )
-        .then((res) => {
-          console.log(res);
-        });
-    }
+    const foo = async () => {
+      if (!loading && data.myPortfolio?.stocks) {
+        const myStocks = stocksToString(data?.myPortfolio?.stocks);
+        const a = await axios.get(`/api/stocks?myStocks=${myStocks}`);
+        console.log("res: ", a);
+      }
+    };
+    foo();
   }, [data]);
 
   if (loading) {
@@ -71,4 +69,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
   );
 };
 
+// export async function getSeverSideProps() {
+//   console.log(process.env.API);
+// }
 export default stocks;
