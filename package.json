@@ -14,7 +14,9 @@
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@types/chart.js": "^2.9.32",
     "axios": "^0.21.1",
+    "chart.js": "^3.3.0",
     "focus-visible": "^5.2.0",
     "formik": "^2.2.6",
     "framer-motion": "^2.9.4",
@@ -22,6 +24,7 @@
     "lodash": "^4.17.21",
     "next": "latest",
     "react": "^17.0.1",
+    "react-chartjs-2": "^3.0.3",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",
     "react-waypoint": "^10.1.0"
