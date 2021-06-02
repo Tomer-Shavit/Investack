@@ -8,6 +8,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { StockBoxesContainer } from "../../components/StockBoxesContainer";
 import { StocksContext } from "../../context/StocksContext";
 import {
+  MyPortfolioDocument,
   useAddStocksToPortfolioMutation,
   useEditValueMutation,
 } from "../../generated/graphql";
@@ -60,7 +61,12 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               width="6rem"
               onClick={async () => {
                 try {
-                  await addStocks({ variables: { stocksInput: addedStocks } });
+                  console.log("addedStocks: ", addedStocks);
+                  console.log("stocksValue: ", stocksValue);
+                  await addStocks({
+                    variables: { stocksInput: addedStocks },
+                    refetchQueries: [{ query: MyPortfolioDocument }],
+                  });
                   await editValue({ variables: { amount: stocksValue } });
                   resetAddedStocks();
                   router.push("/stocks");

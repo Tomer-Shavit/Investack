@@ -42,6 +42,10 @@ export const StocksProvider = ({ children }) => {
   };
 
   const createStocksPortfolio = (fetchedStocks, dbStocks: Stock[]) => {
+    if (Object.keys(fetchedStocks).length === 0) {
+      //doNothing
+      return;
+    }
     dbStocks.forEach((stock) => {
       if (!(stock.symbol in myStocksPortfolio)) {
         setMyStocksPortfolio((myStocksPortfolio) => ({
