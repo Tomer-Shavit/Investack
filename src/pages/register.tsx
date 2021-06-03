@@ -41,7 +41,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 variables: { email: values.email, password: values.password },
                 refetchQueries: [{ query: MeDocument }],
               });
-              console.log("response: ", response);
+
               if (response.data.register.errors) {
                 setErrors(errorsArrayToMap(response.data.register.errors));
               }

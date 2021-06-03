@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from "react";
 import { Loader } from "../components/loader/Loader";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
-import { useMyPortfolioQuery } from "../generated/graphql";
+import { useMeQuery, useMyPortfolioQuery } from "../generated/graphql";
 import axios from "axios";
 import { stocksToString } from "../utils/stocksToString";
 import { AssetsList } from "../components/AssetsList";
@@ -15,27 +15,35 @@ interface StocksProps {}
 
 const stocks: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
-  const { data, loading } = useMyPortfolioQuery();
+  const { data, loading } = useMeQuery();
   const { createStocksPortfolio } = useContext(StocksContext);
 
   let body;
 
   useEffect(() => {
     const fetchStocks = async () => {
-      if (!loading && data?.myPortfolio?.stocks) {
-        const myStocks = stocksToString(data?.myPortfolio?.stocks);
+      if (!loading && data?.me?.user?.portfolio?.stocks) {
+        console.log(
+          "data?.me?.user?.portfolio?.stocks",
+          data?.me?.user?.portfolio?.stocks
+        );
+        const myStocks = stocksToString(data?.me?.user?.portfolio?.stocks);
+        console.log("myStocks: ", myStocks);
         const fetchedStocks = await axios.get(
           `/api/stocks?myStocks=${myStocks}`
         );
-        createStocksPortfolio(fetchedStocks.data, data?.myPortfolio?.stocks);
+        createStocksPortfolio(
+          fetchedStocks.data,
+          data?.me?.user?.portfolio?.stocks
+        );
       }
     };
     fetchStocks();
-  }, [data]);
+  }, [loading]);
 
   if (loading) {
     body = <Loader></Loader>;
-  } else if (!loading && data.myPortfolio?.stocks.length === 0) {
+  } else if (!loading && data?.me?.user?.portfolio?.stocks.length === 0) {
     body = (
       <Flex flexDirection="column" alignItems="center" marginTop="120px">
         <Text color="textDark2" fontSize="lg">
@@ -52,7 +60,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
         </Button>
       </Flex>
     );
-  } else if (!loading && data.myPortfolio?.stocks) {
+  } else if (!loading && data?.me?.user?.portfolio?.stocks) {
     body = (
       <Flex
         alignItems="center"
@@ -91,7 +99,4 @@ const stocks: React.FC<StocksProps> = ({}) => {
   );
 };
 
-// export async function getSeverSideProps() {
-//   console.log(process.env.API);
-// }
 export default stocks;

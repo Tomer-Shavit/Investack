@@ -5,4 +5,5 @@ export interface FetchedStock {
   price: number;
   change: number;
   balance: number;
+  color: string;
 }

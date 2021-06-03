@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
-import { ALL_STOCKS } from "../constants/Stocks 27-04-21";
+import { COLOR_LIST } from "../constants/colorList";
+import { ALL_STOCKS } from "../constants/Stocks 03-06-2021";
 import { Stock, StocksInput } from "../generated/graphql";
 import { FetchedStock } from "../types/FetchedStock";
 
@@ -42,11 +43,13 @@ export const StocksProvider = ({ children }) => {
   };
 
   const createStocksPortfolio = (fetchedStocks, dbStocks: Stock[]) => {
-    if (Object.keys(fetchedStocks).length === 0) {
+    if (Object.keys(fetchedStocks).length === 0 || dbStocks.length === 0) {
       //doNothing
       return;
     }
-    dbStocks.forEach((stock) => {
+    console.log("fetchedStocks: ", fetchedStocks);
+
+    dbStocks.forEach((stock, i) => {
       if (!(stock.symbol in myStocksPortfolio)) {
         setMyStocksPortfolio((myStocksPortfolio) => ({
           ...myStocksPortfolio,
@@ -57,6 +60,7 @@ export const StocksProvider = ({ children }) => {
             price: fetchedStocks[stock.symbol].close,
             change: fetchedStocks[stock.symbol].percent_change,
             balance: stock.shares * fetchedStocks[stock.symbol].close,
+            color: COLOR_LIST[i],
           },
         }));
         calcValue(stock.shares, fetchedStocks[stock.symbol].close);

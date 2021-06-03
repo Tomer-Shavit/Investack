@@ -51,7 +51,6 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
             Object.keys(myStocksPortfolio)[
               ctx?.tooltip?.dataPoints[0]?.dataIndex
             ];
-          console.log(ctx);
           setPriceDisp(ctx.tooltip.dataPoints[0].raw);
           setSymbol(symbol);
           setShares(myStocksPortfolio[symbol].shares);
