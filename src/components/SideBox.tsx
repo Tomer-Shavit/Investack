@@ -1,5 +1,5 @@
 import { Flex, Icon, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -22,7 +22,11 @@ export const SideBox: React.FC<SideBoxProps> = ({ name }) => {
         _hover={{ backgroundColor: "hoverDark" }}
         style={{ transition: "background-color 0.05s ease-in" }}
         boxShadow={
-          name === router.pathname.slice(1) || isHome
+          name ===
+            router.pathname.substring(
+              router.pathname.indexOf("/") + 1,
+              router.pathname.lastIndexOf("/")
+            ) || isHome
             ? `#1FC7D4 4px 0px 0px inset`
             : undefined
         }

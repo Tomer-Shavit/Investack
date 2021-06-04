@@ -57,6 +57,7 @@ export const StocksProvider = ({ children }) => {
             symbol: stock.symbol,
             name: fetchedStocks[stock.symbol].name,
             shares: stock.shares,
+            value: stock.value,
             price: fetchedStocks[stock.symbol].close,
             change: fetchedStocks[stock.symbol].percent_change,
             balance: stock.shares * fetchedStocks[stock.symbol].close,
@@ -71,6 +72,7 @@ export const StocksProvider = ({ children }) => {
             ...myStocksPortfolio[stock.symbol],
             shares: stock.shares,
             price: fetchedStocks[stock.symbol].close,
+            value: stock.value,
             change: fetchedStocks[stock.symbol].percent_change,
             balance: stock.shares * fetchedStocks[stock.symbol].close,
           },
@@ -87,7 +89,10 @@ export const StocksProvider = ({ children }) => {
   };
 
   const addToAddedStocks = (symbol, shares, pricePerShare) => {
-    setAddedStocks((prev) => [...prev, { symbol: symbol, shares: shares }]);
+    setAddedStocks((prev) => [
+      ...prev,
+      { symbol: symbol, shares: shares, value: shares * pricePerShare },
+    ]);
     calcValue(shares, pricePerShare);
   };
 

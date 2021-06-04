@@ -90,6 +90,7 @@ export type Stock = {
   __typename?: 'Stock';
   symbol: Scalars['String'];
   shares: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type User = {
@@ -120,6 +121,7 @@ export type CryptoInput = {
 export type StocksInput = {
   symbol: Scalars['String'];
   shares: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type PortfolioSnippetFragment = (
@@ -127,7 +129,7 @@ export type PortfolioSnippetFragment = (
   & Pick<Portfolio, 'id' | 'userId' | 'value'>
   & { stocks: Array<(
     { __typename?: 'Stock' }
-    & Pick<Stock, 'symbol' | 'shares'>
+    & Pick<Stock, 'symbol' | 'shares' | 'value'>
   )>, crypto: Array<(
     { __typename?: 'Crypto' }
     & Pick<Crypto, 'name' | 'amount'>
@@ -249,6 +251,7 @@ export const PortfolioSnippetFragmentDoc = gql`
   stocks {
     symbol
     shares
+    value
   }
   crypto {
     name

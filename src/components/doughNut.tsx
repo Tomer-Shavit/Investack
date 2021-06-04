@@ -24,7 +24,7 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
           (symbol) => myStocksPortfolio[symbol].balance
         ),
         backgroundColor: COLOR_LIST,
-        hoverOffset: 5,
+        hoverOffset: 8,
         cutout: "85%",
         radius: "95%",
         borderWidth: 0,
@@ -44,7 +44,10 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
       tooltip: {
         enabled: false,
         external: (ctx) => {
-          if (Object.keys(ctx).length === 0) {
+          if (
+            Object.keys(ctx).length === 0 &&
+            Object.keys(myStocksPortfolio).length === 0
+          ) {
             return;
           }
           const symbol =

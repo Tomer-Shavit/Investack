@@ -1,5 +1,6 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect } from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import { DisplayContext } from "../context/DisplayContext";
 import { InnerSideBox } from "./InnerSideBox";
@@ -10,6 +11,16 @@ interface OpenSideBoxProps {
 
 export const OpenSideBox: React.FC<OpenSideBoxProps> = ({ name }) => {
   const { isSideBoxOpen, setIsSideBoxOpen } = useContext(DisplayContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (
+      router.pathname.includes("stocks") ||
+      router.pathname.includes("crypto")
+    ) {
+      setIsSideBoxOpen(true);
+    }
+  }, [router]);
   return (
     <Box>
       <Flex

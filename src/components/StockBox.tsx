@@ -32,7 +32,6 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
   let err = false;
   const [error, setError] = useState(false);
   const isInitialMount = useRef(true);
-  const reg = /^\d+$/;
 
   //validation toasts
   useEffect(() => {
@@ -77,14 +76,21 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
         <Formik
           initialValues={{ [sharesName]: 0, [priceName]: 0 }}
           onSubmit={(values, { setErrors }) => {
-            if (!String(values[sharesName]).match(reg) || !values[sharesName]) {
+            if (
+              !String(values[sharesName]).match(
+                /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/
+              ) ||
+              !values[sharesName]
+            ) {
               err = true;
               console.log("errorFN: ", error);
               setErrors({
                 [sharesName]: "Invalid input.",
               });
             } else if (
-              !String(values[priceName]).match(reg) ||
+              !String(values[priceName]).match(
+                /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/
+              ) ||
               !values[priceName]
             ) {
               setError(true);

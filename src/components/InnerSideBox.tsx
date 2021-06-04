@@ -22,7 +22,12 @@ export const InnerSideBox: React.FC<InnerSideBoxProps> = ({ name }) => {
         height="48px"
         width="100%"
         boxShadow={
-          name === router.pathname.slice(1)
+          name === router.pathname.slice(1) ||
+          name ==
+            router.asPath.substring(
+              router.asPath.indexOf("/") + 1,
+              router.asPath.lastIndexOf("/")
+            )
             ? `#1FC7D4 4px 0px 0px inset`
             : undefined
         }

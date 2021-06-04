@@ -24,6 +24,12 @@ export const AssetsListBox: React.FC<AssetsListBoxProps> = ({
       </Td>
       <Td borderBottomColor="borderDark2">{stock?.shares}</Td>
       <Td borderBottomColor="borderDark2">${(stock?.balance).toFixed(2)}</Td>
+      <Td
+        borderBottomColor="borderDark2"
+        color={stock.value / stock.shares < stock.price ? "#6ede8a" : "#fe4d55"}
+      >
+        {((stock.value / stock.shares / stock.price - 1) * -100).toFixed(2)}%
+      </Td>
       <Td isNumeric borderBottomColor="borderDark2" color={stock.color}>
         {((stock.balance / value) * 100).toFixed(2)}%
       </Td>

@@ -5,6 +5,7 @@ fragment PortfolioSnippet on Portfolio {
   stocks {
     symbol
     shares
+    value
   }
   crypto {
     name

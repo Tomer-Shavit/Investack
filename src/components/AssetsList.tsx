@@ -28,6 +28,7 @@ export const AssetsList: React.FC<AssetsListProps> = (props) => {
           <Th>24H Change</Th>
           <Th>Shares</Th>
           <Th>Value</Th>
+          <Th>Total Profit</Th>
           <Th isNumeric>Portfolio %</Th>
         </Tr>
       </Thead>
