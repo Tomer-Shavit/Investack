@@ -1,10 +1,10 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
 import { Loader } from "../components/loader/Loader";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
-import { useMeQuery, useMyPortfolioQuery } from "../generated/graphql";
+import { useMeQuery } from "../generated/graphql";
 import axios from "axios";
 import { stocksToString } from "../utils/stocksToString";
 import { AssetsList } from "../components/AssetsList";

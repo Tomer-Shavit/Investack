@@ -4,22 +4,23 @@ import { debounce } from "lodash";
 import React, { useCallback, useContext, useState } from "react";
 import { useEffect } from "react";
 import { StocksContext } from "../context/StocksContext";
-import { stocksPagination } from "../utils/stocksPagination";
+import { assetsPagination } from "../utils/stocksPagination";
 import { StockBox } from "./StockBox";
 import { Waypoint } from "react-waypoint";
 
 interface StockBoxesContainerProps {
   search: string | null;
+  assetDict: {};
 }
 
 export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
   search,
+  assetDict,
 }) => {
-  const { allStocks } = useContext(StocksContext);
   const [delayedSearch, setDelayedSearch] = useState("");
   const [counter, setCounter] = useState(50);
   const [shownStocks, setShownStocks] = useState(
-    stocksPagination(allStocks, 0, 50)
+    assetsPagination(assetDict, 0, 50)
   );
   let body;
 
@@ -43,8 +44,8 @@ export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
         {i === shownStocks.length - 15 && (
           <Waypoint
             onEnter={() => {
-              const newStocks = stocksPagination(
-                allStocks,
+              const newStocks = assetsPagination(
+                assetDict,
                 counter,
                 counter + 50
               );
@@ -56,14 +57,14 @@ export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
       </Box>
     ));
   } else {
-    body = Object.keys(allStocks).map((stock, i) => {
+    body = Object.keys(assetDict).map((stock) => {
       if (stock.includes(delayedSearch.toUpperCase())) {
         return (
           <StockBox
             bgColor="#29272e"
             symbol={stock}
             key={stock}
-            fullName={allStocks[stock]}
+            fullName={assetDict[stock].name}
           ></StockBox>
         );
       }

@@ -1,11 +1,11 @@
 import { createContext, useState } from "react";
 import { COLOR_LIST } from "../constants/colorList";
-import { ALL_STOCKS } from "../constants/Stocks 03-06-2021";
+import { ALL_STOCKS } from "../constants/Stocks 05-06-2021";
 import { Stock, StocksInput } from "../generated/graphql";
 import { FetchedStock } from "../types/FetchedStock";
 
 interface StocksContextTypes {
-  allStocks: Record<string, string>;
+  allStocks: Record<string, Record<string, string>>;
   addedStocks: StocksInput[];
   addToAddedStocks: (symbol, shares, pricePerShare) => void;
   stocksValue: number;

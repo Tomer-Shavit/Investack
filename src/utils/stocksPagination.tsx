@@ -1,12 +1,12 @@
-export const stocksPagination = (
-  allStocks: Record<string, string>,
+export const assetsPagination = (
+  allAssets,
   firstIndex: number,
   lastIndex: number
 ) => {
-  const shownStocks = [];
+  const shownAssets = [];
   for (let i = firstIndex; i < lastIndex; i++) {
-    let key = Object.keys(allStocks)[i];
-    shownStocks.push({ [key]: allStocks[key] });
+    let key = Object.keys(allAssets)[i];
+    shownAssets.push({ [key]: allAssets[key].name });
   }
-  return shownStocks;
+  return shownAssets;
 };

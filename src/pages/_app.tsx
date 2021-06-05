@@ -8,6 +8,7 @@ import { DisplayProvider } from "../context/DisplayContext";
 import { StocksProvider } from "../context/StocksContext";
 import "focus-visible/dist/focus-visible";
 import { Global, css } from "@emotion/react";
+import { CryptoProvider } from "../context/CryptoContext";
 
 const GlobalStyles = css`
   /*
@@ -35,16 +36,18 @@ function MyApp({ Component, pageProps }) {
     <ApolloProvider client={client}>
       <DisplayProvider>
         <StocksProvider>
-          <ChakraProvider resetCSS theme={theme}>
-            <ColorModeProvider
-              options={{
-                useSystemColorMode: true,
-              }}
-            >
-              <Global styles={GlobalStyles} />
-              <Component {...pageProps} />
-            </ColorModeProvider>
-          </ChakraProvider>
+          <CryptoProvider>
+            <ChakraProvider resetCSS theme={theme}>
+              <ColorModeProvider
+                options={{
+                  useSystemColorMode: true,
+                }}
+              >
+                <Global styles={GlobalStyles} />
+                <Component {...pageProps} />
+              </ColorModeProvider>
+            </ChakraProvider>
+          </CryptoProvider>
         </StocksProvider>
       </DisplayProvider>
     </ApolloProvider>

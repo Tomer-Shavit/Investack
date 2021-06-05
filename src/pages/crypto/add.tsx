@@ -6,6 +6,7 @@ import { InputField } from "../../components/inputField";
 import { LockedContentContainer } from "../../components/LockedContentContainer";
 import { PageLayout } from "../../components/PageLayout";
 import { StockBoxesContainer } from "../../components/StockBoxesContainer";
+import { CryptoContext } from "../../context/CryptoContext";
 import { StocksContext } from "../../context/StocksContext";
 import {
   MeDocument,
@@ -17,14 +18,11 @@ interface sGettingStartedProps {}
 
 const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
-  const [stockSearch, setStockSearch] = useState<string | null>(null);
-  const [addStocks] = useAddStocksToPortfolioMutation();
-  const [editValue] = useEditValueMutation();
-  const { addedStocks, stocksValue, resetAddedStocks, allStocks } =
-    useContext(StocksContext);
+  const { allCrypto } = useContext(CryptoContext);
+  const [cryptoSearch, setCryptoSearch] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStockSearch(e.target.value);
+    setCryptoSearch(e.target.value);
   };
 
   return (
@@ -32,7 +30,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
       <LockedContentContainer>
         <Flex flexDirection="column" p={8} alignItems="center">
           <Heading marginBottom={5} color="textDark">
-            Add Stocks to Portfolio
+            Add Crypto to Portfolio
           </Heading>
           <Text
             color="textDark2"
@@ -41,16 +39,16 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             whiteSpace="pre-wrap"
             textAlign="center"
           >
-            To add stocks to your portfolio, search the stock symbol, click on
+            To add crypto to your portfolio, search the coin's symbol, click on
             the plus and fill in the details.{"\n"}When you're done adding all
-            your stocks, click Save.
+            your coins, click Save.
           </Text>
           <Flex width="80%" marginBottom={5} alignItems="center">
             <Box width="40%" marginRight="auto">
               <InputField
                 color="textDark"
                 onChange={handleChange}
-                placeholder="E.g. AAPL"
+                placeholder="E.g. BTC"
                 type="text"
               ></InputField>
             </Box>
@@ -61,14 +59,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               width="6rem"
               onClick={async () => {
                 try {
-                  console.log("addedStocks: ", addedStocks);
-                  await addStocks({
-                    variables: { stocksInput: addedStocks },
-                    refetchQueries: [{ query: MeDocument }],
-                  });
-                  await editValue({ variables: { amount: stocksValue } });
-                  resetAddedStocks();
-                  router.push("/stocks");
+                  router.push("/crypto");
                 } catch (e) {
                   console.error(e);
                 }
@@ -79,8 +70,8 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
           </Flex>
           <Flex flexDir="column" width="80%">
             <StockBoxesContainer
-              assetDict={allStocks}
-              search={stockSearch}
+              assetDict={allCrypto}
+              search={cryptoSearch}
             ></StockBoxesContainer>
           </Flex>
         </Flex>
