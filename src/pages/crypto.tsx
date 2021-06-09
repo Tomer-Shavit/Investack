@@ -6,7 +6,7 @@ import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
 import { useMeQuery } from "../generated/graphql";
 import axios from "axios";
-import { stocksToString } from "../utils/stocksToString";
+import { assetsToString } from "../utils/assetsToString";
 import { AssetsList } from "../components/AssetsList";
 import { StocksContext } from "../context/StocksContext";
 import { DoughNut } from "../components/doughNut";
@@ -17,7 +17,21 @@ const crypto: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
   const { data, loading } = useMeQuery();
   let body;
+  useEffect(() => {
+    const fetchCrypto = async () => {
+      if (!loading && data?.me?.user?.portfolio?.crypto) {
+        const myCrypto = assetsToString(
+          data.me.user.portfolio.crypto,
+          "crypto"
+        );
 
+        const fetchCrypto = await axios.get(`/api/crypto?myCrypto=${myCrypto}`);
+        console.log("fetchCrypto: ", fetchCrypto);
+        //TODO context crypto portfolio maker function
+      }
+    };
+    fetchCrypto();
+  }, [loading]);
   // useEffect(() => {
   //   const fetchStocks = async () => {
   //   if (!loading && data?.me?.user?.portfolio?.stocks) {

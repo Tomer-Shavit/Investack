@@ -1,0 +1,3 @@
+mutation EditCryptoValue($amount: Float!) {
+  editCryptoValue(amount: $amount)
+}

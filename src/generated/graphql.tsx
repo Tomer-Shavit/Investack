@@ -16,8 +16,9 @@ export type Scalars = {
 
 export type Crypto = {
   __typename?: 'Crypto';
-  name: Scalars['String'];
+  symbol: Scalars['String'];
   amount: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type FieldErrors = {
@@ -34,7 +35,8 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   addStocks: Scalars['Boolean'];
   addCrypto: Scalars['Boolean'];
-  editValue: Scalars['Boolean'];
+  editStocksValue: Scalars['Boolean'];
+  editCryptoValue: Scalars['Boolean'];
 };
 
 
@@ -63,7 +65,12 @@ export type MutationAddCryptoArgs = {
 };
 
 
-export type MutationEditValueArgs = {
+export type MutationEditStocksValueArgs = {
+  amount: Scalars['Float'];
+};
+
+
+export type MutationEditCryptoValueArgs = {
   amount: Scalars['Float'];
 };
 
@@ -74,7 +81,8 @@ export type Portfolio = {
   stocks: Array<Stock>;
   crypto: Array<Crypto>;
   user: User;
-  value: Scalars['Float'];
+  stocksValue: Scalars['Float'];
+  cryptoValue: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -114,8 +122,9 @@ export type UserResponse = {
 };
 
 export type CryptoInput = {
-  name: Scalars['String'];
+  symbol: Scalars['String'];
   amount: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type StocksInput = {
@@ -126,24 +135,34 @@ export type StocksInput = {
 
 export type PortfolioSnippetFragment = (
   { __typename?: 'Portfolio' }
-  & Pick<Portfolio, 'id' | 'userId' | 'value'>
+  & Pick<Portfolio, 'id' | 'userId' | 'stocksValue' | 'cryptoValue'>
   & { stocks: Array<(
     { __typename?: 'Stock' }
     & Pick<Stock, 'symbol' | 'shares' | 'value'>
   )>, crypto: Array<(
     { __typename?: 'Crypto' }
-    & Pick<Crypto, 'name' | 'amount'>
+    & Pick<Crypto, 'symbol' | 'amount' | 'value'>
   )> }
 );
 
-export type EditValueMutationVariables = Exact<{
+export type EditCryptoValueMutationVariables = Exact<{
   amount: Scalars['Float'];
 }>;
 
 
-export type EditValueMutation = (
+export type EditCryptoValueMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'editValue'>
+  & Pick<Mutation, 'editCryptoValue'>
+);
+
+export type EditStocksValueMutationVariables = Exact<{
+  amount: Scalars['Float'];
+}>;
+
+
+export type EditStocksValueMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'editStocksValue'>
 );
 
 export type AddCryptoToPortfolioMutationVariables = Exact<{
@@ -247,49 +266,82 @@ export const PortfolioSnippetFragmentDoc = gql`
     fragment PortfolioSnippet on Portfolio {
   id
   userId
-  value
+  stocksValue
+  cryptoValue
   stocks {
     symbol
     shares
     value
   }
   crypto {
-    name
+    symbol
     amount
+    value
   }
 }
     `;
-export const EditValueDocument = gql`
-    mutation EditValue($amount: Float!) {
-  editValue(amount: $amount)
+export const EditCryptoValueDocument = gql`
+    mutation EditCryptoValue($amount: Float!) {
+  editCryptoValue(amount: $amount)
 }
     `;
-export type EditValueMutationFn = Apollo.MutationFunction<EditValueMutation, EditValueMutationVariables>;
+export type EditCryptoValueMutationFn = Apollo.MutationFunction<EditCryptoValueMutation, EditCryptoValueMutationVariables>;
 
 /**
- * __useEditValueMutation__
+ * __useEditCryptoValueMutation__
  *
- * To run a mutation, you first call `useEditValueMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEditValueMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useEditCryptoValueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCryptoValueMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [editValueMutation, { data, loading, error }] = useEditValueMutation({
+ * const [editCryptoValueMutation, { data, loading, error }] = useEditCryptoValueMutation({
  *   variables: {
  *      amount: // value for 'amount'
  *   },
  * });
  */
-export function useEditValueMutation(baseOptions?: Apollo.MutationHookOptions<EditValueMutation, EditValueMutationVariables>) {
+export function useEditCryptoValueMutation(baseOptions?: Apollo.MutationHookOptions<EditCryptoValueMutation, EditCryptoValueMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EditValueMutation, EditValueMutationVariables>(EditValueDocument, options);
+        return Apollo.useMutation<EditCryptoValueMutation, EditCryptoValueMutationVariables>(EditCryptoValueDocument, options);
       }
-export type EditValueMutationHookResult = ReturnType<typeof useEditValueMutation>;
-export type EditValueMutationResult = Apollo.MutationResult<EditValueMutation>;
-export type EditValueMutationOptions = Apollo.BaseMutationOptions<EditValueMutation, EditValueMutationVariables>;
+export type EditCryptoValueMutationHookResult = ReturnType<typeof useEditCryptoValueMutation>;
+export type EditCryptoValueMutationResult = Apollo.MutationResult<EditCryptoValueMutation>;
+export type EditCryptoValueMutationOptions = Apollo.BaseMutationOptions<EditCryptoValueMutation, EditCryptoValueMutationVariables>;
+export const EditStocksValueDocument = gql`
+    mutation EditStocksValue($amount: Float!) {
+  editStocksValue(amount: $amount)
+}
+    `;
+export type EditStocksValueMutationFn = Apollo.MutationFunction<EditStocksValueMutation, EditStocksValueMutationVariables>;
+
+/**
+ * __useEditStocksValueMutation__
+ *
+ * To run a mutation, you first call `useEditStocksValueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditStocksValueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editStocksValueMutation, { data, loading, error }] = useEditStocksValueMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useEditStocksValueMutation(baseOptions?: Apollo.MutationHookOptions<EditStocksValueMutation, EditStocksValueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditStocksValueMutation, EditStocksValueMutationVariables>(EditStocksValueDocument, options);
+      }
+export type EditStocksValueMutationHookResult = ReturnType<typeof useEditStocksValueMutation>;
+export type EditStocksValueMutationResult = Apollo.MutationResult<EditStocksValueMutation>;
+export type EditStocksValueMutationOptions = Apollo.BaseMutationOptions<EditStocksValueMutation, EditStocksValueMutationVariables>;
 export const AddCryptoToPortfolioDocument = gql`
     mutation AddCryptoToPortfolio($cryptoInput: [cryptoInput!]!) {
   addCrypto(cryptoInput: $cryptoInput)

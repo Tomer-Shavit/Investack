@@ -1,25 +1,25 @@
-import { Flex } from "@chakra-ui/layout";
 import { Accordion, Box } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { StocksContext } from "../context/StocksContext";
-import { assetsPagination } from "../utils/stocksPagination";
-import { StockBox } from "./StockBox";
+import { assetsPagination } from "../utils/assetsPagination";
+import { AssetBox } from "./AssetBox";
 import { Waypoint } from "react-waypoint";
 
-interface StockBoxesContainerProps {
+interface AssetsBoxesContainerProps {
   search: string | null;
   assetDict: {};
+  type: "stocks" | "crypto";
 }
 
-export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
+export const AssetsBoxesContainer: React.FC<AssetsBoxesContainerProps> = ({
   search,
   assetDict,
+  type,
 }) => {
   const [delayedSearch, setDelayedSearch] = useState("");
   const [counter, setCounter] = useState(50);
-  const [shownStocks, setShownStocks] = useState(
+  const [shownAssets, setShownAssets] = useState(
     assetsPagination(assetDict, 0, 50)
   );
   let body;
@@ -34,22 +34,23 @@ export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
   useEffect(() => debouncedText(search), [debouncedText, search]);
 
   if (!delayedSearch) {
-    body = shownStocks.map((stock: Record<string, string>, i) => (
-      <Box key={Object.keys(stock)[0]}>
-        <StockBox
+    body = shownAssets.map((asset: Record<string, string>, i) => (
+      <Box key={Object.keys(asset)[0]}>
+        <AssetBox
           bgColor={i % 2 == 0 ? "#29272e" : "#1B1A1E"}
-          symbol={Object.keys(stock)[0]}
-          fullName={Object.values(stock)[0]}
-        ></StockBox>
-        {i === shownStocks.length - 15 && (
+          symbol={Object.keys(asset)[0]}
+          fullName={Object.values(asset)[0]}
+          type={type}
+        ></AssetBox>
+        {i === shownAssets.length - 15 && (
           <Waypoint
             onEnter={() => {
-              const newStocks = assetsPagination(
+              const newAssets = assetsPagination(
                 assetDict,
                 counter,
                 counter + 50
               );
-              setShownStocks((shownStocks) => [...shownStocks, ...newStocks]);
+              setShownAssets((shownAssets) => [...shownAssets, ...newAssets]);
               setCounter(counter + 50);
             }}
           ></Waypoint>
@@ -57,15 +58,16 @@ export const StockBoxesContainer: React.FC<StockBoxesContainerProps> = ({
       </Box>
     ));
   } else {
-    body = Object.keys(assetDict).map((stock) => {
-      if (stock.includes(delayedSearch.toUpperCase())) {
+    body = Object.keys(assetDict).map((symbol) => {
+      if (symbol.includes(delayedSearch.toUpperCase())) {
         return (
-          <StockBox
+          <AssetBox
             bgColor="#29272e"
-            symbol={stock}
-            key={stock}
-            fullName={assetDict[stock].name}
-          ></StockBox>
+            symbol={symbol}
+            key={symbol}
+            fullName={assetDict[symbol].name}
+            type={type}
+          ></AssetBox>
         );
       }
     });

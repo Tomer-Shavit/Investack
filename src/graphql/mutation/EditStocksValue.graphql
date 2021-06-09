@@ -1,0 +1,3 @@
+mutation EditStocksValue($amount: Float!) {
+  editStocksValue(amount: $amount)
+}

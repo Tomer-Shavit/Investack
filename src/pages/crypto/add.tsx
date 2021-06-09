@@ -5,20 +5,24 @@ import React, { useContext, useState } from "react";
 import { InputField } from "../../components/inputField";
 import { LockedContentContainer } from "../../components/LockedContentContainer";
 import { PageLayout } from "../../components/PageLayout";
-import { StockBoxesContainer } from "../../components/StockBoxesContainer";
+import { AssetsBoxesContainer as AssetsBoxesContainer } from "../../components/AssetsBoxesContainer";
 import { CryptoContext } from "../../context/CryptoContext";
 import { StocksContext } from "../../context/StocksContext";
 import {
   MeDocument,
-  useAddStocksToPortfolioMutation,
-  useEditValueMutation,
+  useAddCryptoToPortfolioMutation,
+  useEditCryptoValueMutation,
 } from "../../generated/graphql";
 
 interface sGettingStartedProps {}
 
 const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
-  const { allCrypto } = useContext(CryptoContext);
+  const [addCrypto] = useAddCryptoToPortfolioMutation();
+  const [editCryptoValue] = useEditCryptoValueMutation();
+  const { addedCrypto, allCrypto, cryptoValue, resetAddedCrypto } =
+    useContext(CryptoContext);
+
   const [cryptoSearch, setCryptoSearch] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +63,14 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               width="6rem"
               onClick={async () => {
                 try {
+                  console.log("addedCrypto: ", addedCrypto);
+                  console.log("cryptoValue: ", cryptoValue);
+                  await addCrypto({
+                    variables: { cryptoInput: addedCrypto },
+                    refetchQueries: [{ query: MeDocument }],
+                  });
+                  await editCryptoValue({ variables: { amount: cryptoValue } });
+                  resetAddedCrypto();
                   router.push("/crypto");
                 } catch (e) {
                   console.error(e);
@@ -69,10 +81,11 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             </Button>
           </Flex>
           <Flex flexDir="column" width="80%">
-            <StockBoxesContainer
+            <AssetsBoxesContainer
+              type="crypto"
               assetDict={allCrypto}
               search={cryptoSearch}
-            ></StockBoxesContainer>
+            ></AssetsBoxesContainer>
           </Flex>
         </Flex>
       </LockedContentContainer>

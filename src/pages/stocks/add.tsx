@@ -5,12 +5,12 @@ import React, { useContext, useState } from "react";
 import { InputField } from "../../components/inputField";
 import { LockedContentContainer } from "../../components/LockedContentContainer";
 import { PageLayout } from "../../components/PageLayout";
-import { StockBoxesContainer } from "../../components/StockBoxesContainer";
+import { AssetsBoxesContainer } from "../../components/AssetsBoxesContainer";
 import { StocksContext } from "../../context/StocksContext";
 import {
   MeDocument,
   useAddStocksToPortfolioMutation,
-  useEditValueMutation,
+  useEditStocksValueMutation,
 } from "../../generated/graphql";
 
 interface sGettingStartedProps {}
@@ -19,7 +19,7 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
   const router = useRouter();
   const [stockSearch, setStockSearch] = useState<string | null>(null);
   const [addStocks] = useAddStocksToPortfolioMutation();
-  const [editValue] = useEditValueMutation();
+  const [editStocksValue] = useEditStocksValueMutation();
   const { addedStocks, stocksValue, resetAddedStocks, allStocks } =
     useContext(StocksContext);
 
@@ -61,12 +61,11 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               width="6rem"
               onClick={async () => {
                 try {
-                  console.log("addedStocks: ", addedStocks);
                   await addStocks({
                     variables: { stocksInput: addedStocks },
                     refetchQueries: [{ query: MeDocument }],
                   });
-                  await editValue({ variables: { amount: stocksValue } });
+                  await editStocksValue({ variables: { amount: stocksValue } });
                   resetAddedStocks();
                   router.push("/stocks");
                 } catch (e) {
@@ -78,10 +77,11 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
             </Button>
           </Flex>
           <Flex flexDir="column" width="80%">
-            <StockBoxesContainer
+            <AssetsBoxesContainer
               assetDict={allStocks}
               search={stockSearch}
-            ></StockBoxesContainer>
+              type="stocks"
+            ></AssetsBoxesContainer>
           </Flex>
         </Flex>
       </LockedContentContainer>

@@ -6,7 +6,7 @@ import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
 import { useMeQuery } from "../generated/graphql";
 import axios from "axios";
-import { stocksToString } from "../utils/stocksToString";
+import { assetsToString } from "../utils/assetsToString";
 import { AssetsList } from "../components/AssetsList";
 import { StocksContext } from "../context/StocksContext";
 import { DoughNut } from "../components/doughNut";
@@ -16,19 +16,17 @@ interface StocksProps {}
 const stocks: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
   const { data, loading } = useMeQuery();
-  const { createStocksPortfolio } = useContext(StocksContext);
+  const { createStocksPortfolio, loadingStocks } = useContext(StocksContext);
 
   let body;
 
   useEffect(() => {
     const fetchStocks = async () => {
       if (!loading && data?.me?.user?.portfolio?.stocks) {
-        console.log(
-          "data?.me?.user?.portfolio?.stocks",
-          data?.me?.user?.portfolio?.stocks
+        const myStocks = assetsToString(
+          data?.me?.user?.portfolio?.stocks,
+          "stocks"
         );
-        const myStocks = stocksToString(data?.me?.user?.portfolio?.stocks);
-        console.log("myStocks: ", myStocks);
         const fetchedStocks = await axios.get(
           `/api/stocks?myStocks=${myStocks}`
         );
@@ -60,6 +58,8 @@ const stocks: React.FC<StocksProps> = ({}) => {
         </Button>
       </Flex>
     );
+  } else if (!loading && loadingStocks) {
+    body = <Loader></Loader>;
   } else if (!loading && data?.me?.user?.portfolio?.stocks) {
     body = (
       <Flex
@@ -67,7 +67,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Flex width="85%" marginTop={3} marginBottom={3} alignItems="center">
+        <Flex width="85%" marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
           <DoughNut></DoughNut>
           <Flex flex={1} height="100%">
@@ -90,8 +90,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
   return (
     <PageLayout>
       <LockedContentContainer>
-        <Flex flexDirection="column" p={5}>
-          <Heading color="textDark">My Stocks</Heading>
+        <Flex flexDirection="column" p={3}>
           {body}
         </Flex>
       </LockedContentContainer>

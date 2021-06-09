@@ -47,8 +47,7 @@ export const StocksProvider = ({ children }) => {
       //doNothing
       return;
     }
-    console.log("fetchedStocks: ", fetchedStocks);
-
+    setLoadingStocks(true);
     dbStocks.forEach((stock, i) => {
       if (!(stock.symbol in myStocksPortfolio)) {
         setMyStocksPortfolio((myStocksPortfolio) => ({
@@ -80,7 +79,7 @@ export const StocksProvider = ({ children }) => {
         calcValue(stock.shares, fetchedStocks[stock.symbol].close);
       }
     });
-    setLoadingStocks(!loadingStocks);
+    setLoadingStocks(false);
   };
 
   const resetAddedStocks = () => {

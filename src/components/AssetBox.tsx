@@ -13,21 +13,24 @@ import { Formik, Form } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
+import { CryptoContext } from "../context/CryptoContext";
 import { StocksContext } from "../context/StocksContext";
 
 import { InputFormField } from "./InputFormField";
 
-interface StockBoxProps {
+interface AssetBoxProps {
   symbol: string;
   fullName: string;
   bgColor: string;
+  type: "stocks" | "crypto";
 }
 
-export const StockBox: React.FC<StockBoxProps> = (props) => {
+export const AssetBox: React.FC<AssetBoxProps> = (props) => {
   const { addToAddedStocks } = useContext(StocksContext);
+  const { addToAddedCrypto } = useContext(CryptoContext);
   const toast = useToast();
   const priceName = "price" + `${props.symbol}`;
-  const sharesName = "shares" + `${props.symbol}`;
+  const sharesOrAmountName = "sharesOrAmount" + `${props.symbol}`;
   const [add, setAdd] = useState(0);
   let err = false;
   const [error, setError] = useState(false);
@@ -74,18 +77,18 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
       </AccordionButton>
       <AccordionPanel pb={4} color="textDark">
         <Formik
-          initialValues={{ [sharesName]: 0, [priceName]: 0 }}
+          initialValues={{ [sharesOrAmountName]: 0, [priceName]: 0 }}
           onSubmit={(values, { setErrors }) => {
             if (
-              !String(values[sharesName]).match(
+              !String(values[sharesOrAmountName]).match(
                 /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/
               ) ||
-              !values[sharesName]
+              !values[sharesOrAmountName]
             ) {
               err = true;
               console.log("errorFN: ", error);
               setErrors({
-                [sharesName]: "Invalid input.",
+                [sharesOrAmountName]: "Invalid input.",
               });
             } else if (
               !String(values[priceName]).match(
@@ -100,11 +103,19 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
             } else {
               err = false;
               setAdd(0);
-              addToAddedStocks(
-                props.symbol,
-                values[sharesName],
-                values[priceName]
-              );
+              if (props.type == "stocks") {
+                addToAddedStocks(
+                  props.symbol,
+                  values[sharesOrAmountName],
+                  values[priceName]
+                );
+              } else {
+                addToAddedCrypto(
+                  props.symbol,
+                  values[sharesOrAmountName],
+                  values[priceName]
+                );
+              }
             }
           }}
         >
@@ -121,14 +132,18 @@ export const StockBox: React.FC<StockBoxProps> = (props) => {
                   width="85%"
                 >
                   <InputFormField
-                    name={sharesName}
-                    placeholder="Number of shares"
-                    label="Shares"
+                    name={sharesOrAmountName}
+                    placeholder={
+                      props.type === "stocks"
+                        ? "Number of Shares"
+                        : "Amount of Coins"
+                    }
+                    label={props.type === "stocks" ? "Shares" : "Tokens"}
                     type="number"
                   ></InputFormField>
                   <InputFormField
                     name={priceName}
-                    placeholder="Price per share"
+                    placeholder="Purchase Price"
                     label="Price"
                     type="number"
                   ></InputFormField>

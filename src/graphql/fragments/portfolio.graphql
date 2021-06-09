@@ -1,14 +1,16 @@
 fragment PortfolioSnippet on Portfolio {
   id
   userId
-  value
+  stocksValue
+  cryptoValue
   stocks {
     symbol
     shares
     value
   }
   crypto {
-    name
+    symbol
     amount
+    value
   }
 }
