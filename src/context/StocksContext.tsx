@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { COLOR_LIST } from "../constants/colorList";
+import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { ALL_STOCKS } from "../constants/Stocks 05-06-2021";
 import { Stock, StocksInput } from "../generated/graphql";
 import { FetchedStock } from "../types/FetchedStock";
@@ -20,8 +20,8 @@ export const contextDefaultValues: StocksContextTypes = {
   addedStocks: [],
   addToAddedStocks: () => {},
   stocksValue: 0,
-  myStocksPortfolio: {},
   resetAddedStocks: () => {},
+  myStocksPortfolio: {},
   createStocksPortfolio: () => {},
   loadingStocks: true,
 };
@@ -60,7 +60,7 @@ export const StocksProvider = ({ children }) => {
             price: fetchedStocks[stock.symbol].close,
             change: fetchedStocks[stock.symbol].percent_change,
             balance: stock.shares * fetchedStocks[stock.symbol].close,
-            color: COLOR_LIST[i],
+            color: STOCKS_COLOR_LIST[i],
           },
         }));
         calcValue(stock.shares, fetchedStocks[stock.symbol].close);

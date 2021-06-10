@@ -1,6 +1,8 @@
 import { createContext, useState } from "react";
+import { CRYPTO_COLOR_LIST } from "../constants/colorList";
 import { ALL_CRYPTO } from "../constants/Crypto 05-06-2021";
 import { CryptoInput } from "../generated/graphql";
+import { FetchedCrypto } from "../types/FetchedCrypto";
 
 interface CryptoContextTypes {
   allCrypto: {};
@@ -9,6 +11,8 @@ interface CryptoContextTypes {
   resetAddedCrypto: () => void;
   cryptoValue: number;
   loadingCrypto: boolean;
+  myCryptoPortfolio: Record<string, FetchedCrypto>;
+  createCryptoPortfolio: (fetchedCrypto, dbCrypto) => void;
 }
 
 const cryptoDefaultValues = {
@@ -17,6 +21,8 @@ const cryptoDefaultValues = {
   addToAddedCrypto: () => {},
   resetAddedCrypto: () => {},
   cryptoValue: 0,
+  myCryptoPortfolio: {},
+  createCryptoPortfolio: () => {},
   loadingCrypto: true,
 };
 
@@ -27,7 +33,51 @@ export const CryptoProvider = ({ children }) => {
   const allCrypto = ALL_CRYPTO;
   const [addedCrypto, setAddedCrypto] = useState([]);
   const [cryptoValue, setCryptoValue] = useState(0);
-  const [loadingCrypto, setLoadingCrypto] = useState();
+  const [loadingCrypto, setLoadingCrypto] = useState(true);
+  const [myCryptoPortfolio, setMyCryptoPortfolio] = useState<
+    Record<string, FetchedCrypto>
+  >({});
+
+  const createCryptoPortfolio = (fetchedCrypto, dbCrypto: CryptoInput[]) => {
+    if (Object.keys(fetchedCrypto).length === 0 || dbCrypto.length === 0) {
+      //doNothing
+      return;
+    }
+    setLoadingCrypto(true);
+    dbCrypto.forEach((crypto, i) => {
+      if (!(crypto.symbol in myCryptoPortfolio)) {
+        setMyCryptoPortfolio((myCryptoPortfolio) => ({
+          ...myCryptoPortfolio,
+          [crypto.symbol]: {
+            id: fetchedCrypto[crypto.symbol].id,
+            symbol: crypto.symbol,
+            name: fetchedCrypto[crypto.symbol].name,
+            amount: crypto.amount,
+            value: crypto.value,
+            price: fetchedCrypto[crypto.symbol].price,
+            change: fetchedCrypto[crypto.symbol].change,
+            balance: crypto.amount * fetchedCrypto[crypto.symbol].price,
+            color: CRYPTO_COLOR_LIST[i],
+          },
+        }));
+        calcValue(crypto.amount, fetchedCrypto[crypto.symbol].close);
+      } else {
+        setMyCryptoPortfolio((myCryptoPortfolio) => ({
+          ...myCryptoPortfolio,
+          [crypto.symbol]: {
+            ...myCryptoPortfolio[crypto.symbol],
+            amount: crypto.amount,
+            price: fetchedCrypto[crypto.symbol].price,
+            value: crypto.value,
+            change: fetchedCrypto[crypto.symbol].change,
+            balance: crypto.amount * fetchedCrypto[crypto.symbol].price,
+          },
+        }));
+        calcValue(crypto.amount, fetchedCrypto[crypto.symbol].price);
+      }
+    });
+    setLoadingCrypto(false);
+  };
 
   const calcValue = (amount, purchasePrice) => {
     setCryptoValue((prev) => prev + amount * purchasePrice);
@@ -54,6 +104,8 @@ export const CryptoProvider = ({ children }) => {
         resetAddedCrypto,
         cryptoValue,
         loadingCrypto,
+        createCryptoPortfolio,
+        myCryptoPortfolio,
       }}
     >
       {children}

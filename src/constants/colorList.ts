@@ -1,4 +1,4 @@
-export const COLOR_LIST = [
+export const STOCKS_COLOR_LIST = [
   "#2a9d8f",
   "#e9c46a",
   "#f4a261",
@@ -132,6 +132,9 @@ export const COLOR_LIST = [
   "#9cb64a",
   "#996c48",
   "#9ab9b7",
+];
+
+export const CRYPTO_COLOR_LIST = [
   "#06e052",
   "#e3a481",
   "#0eb621",

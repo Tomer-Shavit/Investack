@@ -1,9 +1,8 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { Doughnut, Pie } from "react-chartjs-2";
-import React, { useCallback, useContext, useEffect, useRef } from "react";
-import { COLOR_LIST } from "../constants/colorList";
+import React, { useContext, useRef, useState } from "react";
+import { Doughnut } from "react-chartjs-2";
+import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { StocksContext } from "../context/StocksContext";
-import { useState } from "react";
 import { portfolioSum } from "../utils/portfolioSum";
 
 interface doughNutProps {}
@@ -23,7 +22,7 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
         data: Object.keys(myStocksPortfolio).map(
           (symbol) => myStocksPortfolio[symbol].balance
         ),
-        backgroundColor: COLOR_LIST,
+        backgroundColor: STOCKS_COLOR_LIST,
         hoverOffset: 8,
         cutout: "85%",
         radius: "95%",
