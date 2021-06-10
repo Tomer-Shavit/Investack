@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 import { CRYPTO_COLOR_LIST } from "../constants/colorList";
 import { ALL_CRYPTO } from "../constants/Crypto 05-06-2021";
 import { CryptoInput } from "../generated/graphql";
-import { FetchedCrypto } from "../types/FetchedCrypto";
+import { FetchedAsset } from "../types/FetchedAsset";
 
 interface CryptoContextTypes {
   allCrypto: {};
@@ -11,7 +11,7 @@ interface CryptoContextTypes {
   resetAddedCrypto: () => void;
   cryptoValue: number;
   loadingCrypto: boolean;
-  myCryptoPortfolio: Record<string, FetchedCrypto>;
+  myCryptoPortfolio: Record<string, FetchedAsset>;
   createCryptoPortfolio: (fetchedCrypto, dbCrypto) => void;
 }
 
@@ -35,7 +35,7 @@ export const CryptoProvider = ({ children }) => {
   const [cryptoValue, setCryptoValue] = useState(0);
   const [loadingCrypto, setLoadingCrypto] = useState(true);
   const [myCryptoPortfolio, setMyCryptoPortfolio] = useState<
-    Record<string, FetchedCrypto>
+    Record<string, FetchedAsset>
   >({});
 
   const createCryptoPortfolio = (fetchedCrypto, dbCrypto: CryptoInput[]) => {
@@ -60,7 +60,7 @@ export const CryptoProvider = ({ children }) => {
             color: CRYPTO_COLOR_LIST[i],
           },
         }));
-        calcValue(crypto.amount, fetchedCrypto[crypto.symbol].close);
+        calcValue(crypto.amount, fetchedCrypto[crypto.symbol].price);
       } else {
         setMyCryptoPortfolio((myCryptoPortfolio) => ({
           ...myCryptoPortfolio,

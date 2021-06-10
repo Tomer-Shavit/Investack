@@ -8,14 +8,21 @@ import { useMeQuery } from "../generated/graphql";
 import axios from "axios";
 import { assetsToString } from "../utils/assetsToString";
 import { AssetsList } from "../components/AssetsList";
-import { StocksContext } from "../context/StocksContext";
 import { DoughNut } from "../components/doughNut";
+import { CryptoContext } from "../context/CryptoContext";
+import { CRYPTO_COLOR_LIST } from "../constants/colorList";
 
 interface StocksProps {}
 
 const crypto: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
   const { data, loading } = useMeQuery();
+  const {
+    createCryptoPortfolio,
+    myCryptoPortfolio,
+    loadingCrypto,
+    cryptoValue,
+  } = useContext(CryptoContext);
   let body;
   useEffect(() => {
     const fetchCrypto = async () => {
@@ -24,36 +31,17 @@ const crypto: React.FC<StocksProps> = ({}) => {
           data.me.user.portfolio.crypto,
           "crypto"
         );
-
         const fetchCrypto = await axios.get(`/api/crypto?myCrypto=${myCrypto}`);
-        console.log("fetchCrypto: ", fetchCrypto);
-        //TODO context crypto portfolio maker function
+        createCryptoPortfolio(
+          fetchCrypto.data,
+          data?.me?.user?.portfolio?.crypto
+        );
       }
     };
     fetchCrypto();
   }, [loading]);
-  // useEffect(() => {
-  //   const fetchStocks = async () => {
-  //   if (!loading && data?.me?.user?.portfolio?.stocks) {
-  //     console.log(
-  //       "data?.me?.user?.portfolio?.stocks",
-  //       data?.me?.user?.portfolio?.stocks
-  //     );
-  //     const myStocks = stocksToString(data?.me?.user?.portfolio?.stocks);
-  //     console.log("myStocks: ", myStocks);
-  //     const fetchedStocks = await axios.get(
-  //       `/api/stocks?myStocks=${myStocks}`
-  //     );
-  //     createStocksPortfolio(
-  //       fetchedStocks.data,
-  //       data?.me?.user?.portfolio?.stocks
-  //     );
-  //   }
-  // };
-  // fetchStocks();
-  // }, []);
 
-  if (loading) {
+  if (loading && loadingCrypto) {
     body = <Loader></Loader>;
   } else if (!loading && data?.me?.user?.portfolio.crypto.length === 0) {
     body = (
@@ -81,7 +69,10 @@ const crypto: React.FC<StocksProps> = ({}) => {
       >
         <Flex width="85%" marginTop={3} marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
-          <DoughNut></DoughNut>
+          <DoughNut
+            myCryptoPortfolio={myCryptoPortfolio}
+            colorList={CRYPTO_COLOR_LIST}
+          ></DoughNut>
           <Flex flex={1} height="100%">
             <Button
               alignSelf="flex-end"
@@ -95,14 +86,19 @@ const crypto: React.FC<StocksProps> = ({}) => {
             </Button>
           </Flex>
         </Flex>
-        <AssetsList width="85%"></AssetsList>;
+        <AssetsList
+          assetsPortfolio={myCryptoPortfolio}
+          portfolioValue={cryptoValue}
+          width="85%"
+        ></AssetsList>
+        ;
       </Flex>
     );
   }
   return (
     <PageLayout>
       <LockedContentContainer>
-        <Flex flexDirection="column" p={5}>
+        <Flex flexDirection="column" p={3}>
           {body}
         </Flex>
       </LockedContentContainer>

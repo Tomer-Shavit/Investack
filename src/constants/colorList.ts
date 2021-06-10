@@ -135,14 +135,14 @@ export const STOCKS_COLOR_LIST = [
 ];
 
 export const CRYPTO_COLOR_LIST = [
-  "#06e052",
-  "#e3a481",
-  "#0eb621",
-  "#fc458e",
-  "#b2db15",
-  "#aa226d",
-  "#792ed8",
-  "#73872a",
+  "#4d908e",
+  "#f9844a",
+  "#277da1",
+  "#f3722c",
+  "#c44536",
+  "#ffe066",
+  "#3a506b",
+  "#489fb5",
   "#520d3a",
   "#cefcb8",
   "#a5b3d9",

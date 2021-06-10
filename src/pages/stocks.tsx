@@ -10,13 +10,19 @@ import { assetsToString } from "../utils/assetsToString";
 import { AssetsList } from "../components/AssetsList";
 import { StocksContext } from "../context/StocksContext";
 import { DoughNut } from "../components/doughNut";
+import { STOCKS_COLOR_LIST } from "../constants/colorList";
 
 interface StocksProps {}
 
 const stocks: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
   const { data, loading } = useMeQuery();
-  const { createStocksPortfolio, loadingStocks } = useContext(StocksContext);
+  const {
+    createStocksPortfolio,
+    loadingStocks,
+    myStocksPortfolio,
+    stocksValue,
+  } = useContext(StocksContext);
 
   let body;
 
@@ -69,7 +75,10 @@ const stocks: React.FC<StocksProps> = ({}) => {
       >
         <Flex width="85%" marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
-          <DoughNut></DoughNut>
+          <DoughNut
+            myStocksPortfolio={myStocksPortfolio}
+            colorList={STOCKS_COLOR_LIST}
+          ></DoughNut>
           <Flex flex={1} height="100%">
             <Button
               alignSelf="flex-end"
@@ -83,7 +92,12 @@ const stocks: React.FC<StocksProps> = ({}) => {
             </Button>
           </Flex>
         </Flex>
-        <AssetsList width="85%"></AssetsList>;
+        <AssetsList
+          assetsPortfolio={myStocksPortfolio}
+          portfolioValue={stocksValue}
+          width="85%"
+        ></AssetsList>
+        ;
       </Flex>
     );
   }

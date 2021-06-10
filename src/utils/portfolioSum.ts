@@ -1,6 +1,4 @@
-import { FetchedStock } from "../types/FetchedStock";
-
-export const portfolioSum = (portfolio: Record<string, FetchedStock>) => {
+export const portfolioSum = (portfolio) => {
   let sum = 0;
   Object.keys(portfolio).forEach((symbol) => {
     sum += portfolio[symbol].balance;

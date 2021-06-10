@@ -2,15 +2,15 @@ import { createContext, useState } from "react";
 import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { ALL_STOCKS } from "../constants/Stocks 05-06-2021";
 import { Stock, StocksInput } from "../generated/graphql";
-import { FetchedStock } from "../types/FetchedStock";
+import { FetchedAsset } from "../types/FetchedAsset";
 
 interface StocksContextTypes {
   allStocks: Record<string, Record<string, string>>;
   addedStocks: StocksInput[];
-  addToAddedStocks: (symbol, shares, pricePerShare) => void;
+  addToAddedStocks: (symbol, amount, pricePerShare) => void;
   stocksValue: number;
   resetAddedStocks: () => void;
-  myStocksPortfolio: Record<string, FetchedStock>;
+  myStocksPortfolio: Record<string, FetchedAsset>;
   createStocksPortfolio: (fetchedStocks, dbStocks) => void;
   loadingStocks: boolean;
 }
@@ -34,12 +34,12 @@ export const StocksProvider = ({ children }) => {
   const [stocksValue, setStocksValue] = useState(0);
   const [loadingStocks, setLoadingStocks] = useState(true);
   const [myStocksPortfolio, setMyStocksPortfolio] = useState<
-    Record<string, FetchedStock>
+    Record<string, FetchedAsset>
   >({});
   const allStocks = ALL_STOCKS;
 
-  const calcValue = (shares, pricePerShare) => {
-    setStocksValue((prev) => prev + shares * pricePerShare);
+  const calcValue = (amount, pricePerShare) => {
+    setStocksValue((prev) => prev + amount * pricePerShare);
   };
 
   const createStocksPortfolio = (fetchedStocks, dbStocks: Stock[]) => {
@@ -55,28 +55,28 @@ export const StocksProvider = ({ children }) => {
           [stock.symbol]: {
             symbol: stock.symbol,
             name: fetchedStocks[stock.symbol].name,
-            shares: stock.shares,
+            amount: stock.amount,
             value: stock.value,
             price: fetchedStocks[stock.symbol].close,
             change: fetchedStocks[stock.symbol].percent_change,
-            balance: stock.shares * fetchedStocks[stock.symbol].close,
+            balance: stock.amount * fetchedStocks[stock.symbol].close,
             color: STOCKS_COLOR_LIST[i],
           },
         }));
-        calcValue(stock.shares, fetchedStocks[stock.symbol].close);
+        calcValue(stock.amount, fetchedStocks[stock.symbol].close);
       } else {
         setMyStocksPortfolio((myStocksPortfolio) => ({
           ...myStocksPortfolio,
           [stock.symbol]: {
             ...myStocksPortfolio[stock.symbol],
-            shares: stock.shares,
+            amount: stock.amount,
             price: fetchedStocks[stock.symbol].close,
             value: stock.value,
             change: fetchedStocks[stock.symbol].percent_change,
-            balance: stock.shares * fetchedStocks[stock.symbol].close,
+            balance: stock.amount * fetchedStocks[stock.symbol].close,
           },
         }));
-        calcValue(stock.shares, fetchedStocks[stock.symbol].close);
+        calcValue(stock.amount, fetchedStocks[stock.symbol].close);
       }
     });
     setLoadingStocks(false);
@@ -87,12 +87,12 @@ export const StocksProvider = ({ children }) => {
     setStocksValue(0);
   };
 
-  const addToAddedStocks = (symbol, shares, pricePerShare) => {
+  const addToAddedStocks = (symbol, amount, pricePerShare) => {
     setAddedStocks((prev) => [
       ...prev,
-      { symbol: symbol, shares: shares, value: shares * pricePerShare },
+      { symbol: symbol, amount: amount, value: amount * pricePerShare },
     ]);
-    calcValue(shares, pricePerShare);
+    calcValue(amount, pricePerShare);
   };
 
   return (

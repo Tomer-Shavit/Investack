@@ -9,16 +9,19 @@ import {
   Td,
   Tfoot,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { StocksContext } from "../context/StocksContext";
+import React from "react";
+
+import { FetchedAsset } from "../types/FetchedAsset";
 import { AssetsListBox } from "./AssetsListBox";
 
 interface AssetsListProps {
   width: string;
+  assetsPortfolio: Record<string, FetchedAsset>;
+  portfolioValue: number;
 }
 
 export const AssetsList: React.FC<AssetsListProps> = (props) => {
-  const { myStocksPortfolio, stocksValue } = useContext(StocksContext);
+  const { assetsPortfolio, portfolioValue } = props;
   return (
     <Table width={props.width}>
       <Thead>
@@ -33,11 +36,11 @@ export const AssetsList: React.FC<AssetsListProps> = (props) => {
         </Tr>
       </Thead>
       <Tbody>
-        {Object.keys(myStocksPortfolio).length > 0
-          ? Object.keys(myStocksPortfolio).map((symbol) => (
+        {Object.keys(assetsPortfolio).length > 0
+          ? Object.keys(assetsPortfolio).map((symbol) => (
               <AssetsListBox
-                stock={myStocksPortfolio[symbol]}
-                value={stocksValue}
+                asset={assetsPortfolio[symbol]}
+                value={portfolioValue}
                 key={symbol}
               ></AssetsListBox>
             ))

@@ -1,28 +1,35 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { STOCKS_COLOR_LIST } from "../constants/colorList";
-import { StocksContext } from "../context/StocksContext";
+
+import { FetchedAsset } from "../types/FetchedAsset";
+
+import { assetsData } from "../utils/dounut/chartData";
 import { portfolioSum } from "../utils/portfolioSum";
 
-interface doughNutProps {}
+interface doughNutProps {
+  myStocksPortfolio?: Record<string, FetchedAsset>;
+  myCryptoPortfolio?: Record<string, FetchedAsset>;
+  colorList: string[];
+}
 
-export const DoughNut: React.FC<doughNutProps> = ({}) => {
-  const { myStocksPortfolio } = useContext(StocksContext);
+export const DoughNut: React.FC<doughNutProps> = (props) => {
   const ref = useRef();
-  let initValue = portfolioSum(myStocksPortfolio);
+  let initValue = portfolioSum(
+    props.myStocksPortfolio ? props.myStocksPortfolio : props.myCryptoPortfolio
+  );
   const [priceDisp, setPriceDisp] = useState(initValue);
-  const [shares, setShares] = useState(0);
+  const [amount, setAmount] = useState(0);
   const [symbol, setSymbol] = useState("");
   const [color, setColor] = useState("#fff");
 
   const chartData = {
     datasets: [
       {
-        data: Object.keys(myStocksPortfolio).map(
-          (symbol) => myStocksPortfolio[symbol].balance
-        ),
-        backgroundColor: STOCKS_COLOR_LIST,
+        data: props.myStocksPortfolio
+          ? assetsData(props.myStocksPortfolio)
+          : assetsData(props.myCryptoPortfolio),
+        backgroundColor: props.colorList,
         hoverOffset: 8,
         cutout: "85%",
         radius: "95%",
@@ -45,17 +52,23 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
         external: (ctx) => {
           if (
             Object.keys(ctx).length === 0 &&
-            Object.keys(myStocksPortfolio).length === 0
+            Object.keys(props.myStocksPortfolio).length === 0
           ) {
             return;
           }
-          const symbol =
-            Object.keys(myStocksPortfolio)[
-              ctx?.tooltip?.dataPoints[0]?.dataIndex
-            ];
+
+          const symbol = props.myStocksPortfolio
+            ? Object.keys(props.myStocksPortfolio)[
+                ctx?.tooltip?.dataPoints[0]?.dataIndex
+              ]
+            : Object.keys(props.myCryptoPortfolio)[
+                ctx?.tooltip?.dataPoints[0]?.dataIndex
+              ];
           setPriceDisp(ctx.tooltip.dataPoints[0].raw);
           setSymbol(symbol);
-          setShares(myStocksPortfolio[symbol].shares);
+          props.myStocksPortfolio
+            ? setAmount(props.myStocksPortfolio[symbol].amount)
+            : setAmount(props.myCryptoPortfolio[symbol].amount);
           setColor(ctx.tooltip.labelColors[0].backgroundColor);
         },
       },
@@ -66,7 +79,7 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
     <Flex
       onMouseOut={() => {
         setPriceDisp(initValue);
-        setShares(0);
+        setAmount(0);
       }}
       width="380px"
       overflow="visible"
@@ -95,16 +108,19 @@ export const DoughNut: React.FC<doughNutProps> = ({}) => {
         <Text color="textDark" fontSize="3xl" marginBottom="2px">
           ${priceDisp.toFixed(2)}
         </Text>
-        {shares ? (
+        {amount ? (
           <Text color="textDark" fontSize="lg">
             <Box as="span" fontSize="lg" color={color}>
               {symbol}
             </Box>
-            : {shares} Shares
+            : {amount} {props.myStocksPortfolio ? "Shares" : "Tokens"}
           </Text>
         ) : (
           <Text color="textDark2" fontSize="xl">
-            {Object.keys(myStocksPortfolio).length} Assets
+            {props.myStocksPortfolio
+              ? Object.keys(props.myStocksPortfolio).length
+              : Object.keys(props.myCryptoPortfolio).length}{" "}
+            Assets
           </Text>
         )}
       </Flex>
