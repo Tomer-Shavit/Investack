@@ -14,6 +14,7 @@ import { AssetsList } from "../components/AssetsList";
 import { DoughNut } from "../components/doughNut";
 import { CryptoContext } from "../context/CryptoContext";
 import { CRYPTO_COLOR_LIST } from "../constants/colorList";
+import { useFetchCrypto } from "../utils/hooks/useFetchCrypto";
 
 interface StocksProps {}
 
@@ -23,7 +24,6 @@ const crypto: React.FC<StocksProps> = ({}) => {
   const [editMode, setEditMode] = useState(false);
   const [addCrypto] = useAddCryptoToPortfolioMutation();
   const {
-    createCryptoPortfolio,
     myCryptoPortfolio,
     loadingCrypto,
     cryptoValue,
@@ -32,23 +32,7 @@ const crypto: React.FC<StocksProps> = ({}) => {
     resetAddedCrypto,
   } = useContext(CryptoContext);
   let body;
-
-  useEffect(() => {
-    const fetchCrypto = async () => {
-      if (!loading && data?.me?.user?.portfolio?.crypto) {
-        const myCrypto = assetsToString(
-          data.me.user.portfolio.crypto,
-          "crypto"
-        );
-        const fetchCrypto = await axios.get(`/api/crypto?myCrypto=${myCrypto}`);
-        createCryptoPortfolio(
-          fetchCrypto.data,
-          data?.me?.user?.portfolio?.crypto
-        );
-      }
-    };
-    fetchCrypto();
-  }, [loading]);
+  useFetchCrypto(data, loading);
 
   if (loading && loadingCrypto) {
     body = <Loader></Loader>;

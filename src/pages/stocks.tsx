@@ -14,6 +14,7 @@ import { AssetsList } from "../components/AssetsList";
 import { StocksContext } from "../context/StocksContext";
 import { DoughNut } from "../components/doughNut";
 import { STOCKS_COLOR_LIST } from "../constants/colorList";
+import { useFetchStocks } from "../utils/hooks/useFetchStocks";
 
 interface StocksProps {}
 
@@ -23,7 +24,6 @@ const stocks: React.FC<StocksProps> = ({}) => {
   const { data, loading } = useMeQuery();
   const [editMode, setEditMode] = useState(false);
   const {
-    createStocksPortfolio,
     loadingStocks,
     myStocksPortfolio,
     stocksValue,
@@ -33,25 +33,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
   } = useContext(StocksContext);
 
   let body;
-
-  useEffect(() => {
-    const fetchStocks = async () => {
-      if (!loading && data?.me?.user?.portfolio?.stocks) {
-        const myStocks = assetsToString(
-          data?.me?.user?.portfolio?.stocks,
-          "stocks"
-        );
-        const fetchedStocks = await axios.get(
-          `/api/stocks?myStocks=${myStocks}`
-        );
-        createStocksPortfolio(
-          fetchedStocks.data,
-          data?.me?.user?.portfolio?.stocks
-        );
-      }
-    };
-    fetchStocks();
-  }, [loading]);
+  useFetchStocks(loading, data);
 
   if (loading) {
     body = <Loader></Loader>;

@@ -7,8 +7,8 @@ interface AssetsListProps {
   width: string;
   assetsPortfolio: Record<string, FetchedAsset>;
   portfolioValue: number;
-  editMode: boolean;
-  addFunc: (symbol: any, amount: any, purchasePrice: any) => void;
+  editMode?: boolean;
+  addFunc?: (symbol: any, amount: any, purchasePrice: any) => void;
 }
 
 export const AssetsList: React.FC<AssetsListProps> = (props) => {

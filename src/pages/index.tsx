@@ -7,12 +7,9 @@ import { ICONS_TO_CLASSES } from "../constants/icons";
 import { useRouter } from "next/router";
 import { FullPortfolio } from "../components/fullPortfolio";
 
-// אני לא מעשן עד ה28.5.21
-
 const Index = () => {
   const { data, loading } = useMeQuery();
   const router = useRouter();
-
   let body;
 
   if (loading) {
@@ -80,7 +77,7 @@ const Index = () => {
     data.me?.user?.portfolio?.stocks.length ||
     data.me?.user?.portfolio?.crypto.length
   ) {
-    body = <FullPortfolio></FullPortfolio>;
+    body = <FullPortfolio data={data} loading={loading}></FullPortfolio>;
   }
 
   return (

@@ -1,5 +1,6 @@
 import { Icon, Td, Tr, useDisclosure } from "@chakra-ui/react";
 import React from "react";
+import { useEffect } from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import { FetchedAsset } from "../types/FetchedAsset";
 import { BuySellModal } from "./buySellModal";
@@ -17,7 +18,15 @@ export const AssetsListBox: React.FC<AssetsListBoxProps> = ({
   editMode,
   addFunc,
 }) => {
+  const avgCost = asset.value / asset.amount;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  useEffect(() => {
+    console.log("symbol: ", asset.symbol);
+    console.log("value: ", asset.value);
+    console.log("price: ", asset.price);
+    console.log("amount: ", asset.amount);
+    console.log("----------------------");
+  }, []);
   return (
     <Tr color="textDark" position="relative">
       <Td borderBottomColor="borderDark2" marginRight="auto">
@@ -32,12 +41,17 @@ export const AssetsListBox: React.FC<AssetsListBoxProps> = ({
       </Td>
       <Td borderBottomColor="borderDark2">{asset?.amount}</Td>
       <Td borderBottomColor="borderDark2">${(asset?.balance).toFixed(2)}</Td>
+
       <Td
         borderBottomColor="borderDark2"
-        color={asset.value / asset.amount < asset.price ? "#6ede8a" : "#fe4d55"}
+        color={avgCost < asset.price ? "#6ede8a" : "#fe4d55"}
       >
-        {((asset.price / asset.value / asset.amount - 1) * 100).toFixed(2)}%
+        {avgCost < asset.price
+          ? ((100 * asset.price) / avgCost - 100).toFixed(2)
+          : ((-100 * asset.price) / avgCost).toFixed(2)}
+        %
       </Td>
+
       <Td isNumeric borderBottomColor="borderDark2" color={asset.color}>
         {((asset.balance / value) * 100).toFixed(2)}%
       </Td>

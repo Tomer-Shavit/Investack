@@ -1,18 +1,29 @@
 import { Flex, Button } from "@chakra-ui/react";
 import router from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { CryptoContext } from "../context/CryptoContext";
 import { StocksContext } from "../context/StocksContext";
+import { useFetchCrypto } from "../utils/hooks/useFetchCrypto";
+import { useFetchStocks } from "../utils/hooks/useFetchStocks";
 import { AssetsList } from "./AssetsList";
 import { DoughNut } from "./doughNut";
 
-interface fullPortfolioProps {}
+interface fullPortfolioProps {
+  data: {};
+  loading: boolean;
+}
 
-export const FullPortfolio: React.FC<fullPortfolioProps> = ({}) => {
+export const FullPortfolio: React.FC<fullPortfolioProps> = ({
+  data,
+  loading,
+}) => {
   const { myStocksPortfolio, stocksValue } = useContext(StocksContext);
   const { myCryptoPortfolio, cryptoValue } = useContext(CryptoContext);
+  useFetchStocks(data, loading);
+  useFetchCrypto(data, loading);
+
   return (
     <Flex
       alignItems="center"
@@ -26,18 +37,7 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({}) => {
           myPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
           colorList={STOCKS_COLOR_LIST}
         ></DoughNut>
-        <Flex flex={1} height="100%">
-          <Button
-            alignSelf="flex-end"
-            onClick={() => router.push("/stocks/add")}
-            backgroundColor="accentDark"
-            width="6rem"
-            color="textDark"
-            marginLeft="auto"
-          >
-            Add Stocks
-          </Button>
-        </Flex>
+        <Flex flex={1} height="100%"></Flex>
       </Flex>
       <AssetsList
         assetsPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
