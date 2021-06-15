@@ -8,6 +8,7 @@ interface StocksContextTypes {
   allStocks: Record<string, Record<string, string>>;
   addedStocks: StocksInput[];
   addToAddedStocks: (symbol, amount, pricePerShare) => void;
+
   stocksValue: number;
   resetAddedStocks: () => void;
   myStocksPortfolio: Record<string, FetchedAsset>;
@@ -87,12 +88,12 @@ export const StocksProvider = ({ children }) => {
     setStocksValue(0);
   };
 
-  const addToAddedStocks = (symbol, amount, pricePerShare) => {
+  const addToAddedStocks = (symbol, amount, purchasePrice) => {
     setAddedStocks((prev) => [
       ...prev,
-      { symbol: symbol, amount: amount, value: amount * pricePerShare },
+      { symbol: symbol, amount: amount, value: amount * purchasePrice },
     ]);
-    calcValue(amount, pricePerShare);
+    calcValue(amount, purchasePrice);
   };
 
   return (

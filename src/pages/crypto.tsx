@@ -1,10 +1,13 @@
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Loader } from "../components/loader/Loader";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
-import { useMeQuery } from "../generated/graphql";
+import {
+  useAddCryptoToPortfolioMutation,
+  useMeQuery,
+} from "../generated/graphql";
 import axios from "axios";
 import { assetsToString } from "../utils/assetsToString";
 import { AssetsList } from "../components/AssetsList";
@@ -17,13 +20,19 @@ interface StocksProps {}
 const crypto: React.FC<StocksProps> = ({}) => {
   const router = useRouter();
   const { data, loading } = useMeQuery();
+  const [editMode, setEditMode] = useState(false);
+  const [addCrypto] = useAddCryptoToPortfolioMutation();
   const {
     createCryptoPortfolio,
     myCryptoPortfolio,
     loadingCrypto,
     cryptoValue,
+    addedCrypto,
+    addToAddedCrypto,
+    resetAddedCrypto,
   } = useContext(CryptoContext);
   let body;
+
   useEffect(() => {
     const fetchCrypto = async () => {
       if (!loading && data?.me?.user?.portfolio?.crypto) {
@@ -70,25 +79,57 @@ const crypto: React.FC<StocksProps> = ({}) => {
         <Flex width="85%" marginTop={3} marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
           <DoughNut
-            myCryptoPortfolio={myCryptoPortfolio}
+            myPortfolio={myCryptoPortfolio}
             colorList={CRYPTO_COLOR_LIST}
           ></DoughNut>
-          <Flex flex={1} height="100%">
+          <Flex flex={1} height="100%" justifyContent="flex-end">
             <Button
+              display={editMode ? "none" : undefined}
               alignSelf="flex-end"
               onClick={() => router.push("/crypto/add")}
               backgroundColor="accentDark"
-              width="6rem"
               color="textDark"
-              marginLeft="auto"
+              paddingLeft={2}
+              paddingRight={2}
             >
               Add Crypto
+            </Button>
+            <Button
+              display={editMode ? undefined : "none"}
+              color="textDark"
+              alignSelf="flex-end"
+              variant="ghost"
+              onClick={() => {
+                setEditMode(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              alignSelf="flex-end"
+              backgroundColor="accentDark"
+              color="textDark"
+              paddingLeft={2}
+              paddingRight={2}
+              onClick={async () => {
+                if (addedCrypto.length > 0 && editMode) {
+                  await addCrypto({ variables: { cryptoInput: addedCrypto } });
+                  resetAddedCrypto();
+                  router.reload();
+                }
+                setEditMode(!editMode);
+              }}
+              marginLeft="1.5rem"
+            >
+              {editMode ? "Save Changes" : "Edit Crypto"}
             </Button>
           </Flex>
         </Flex>
         <AssetsList
           assetsPortfolio={myCryptoPortfolio}
           portfolioValue={cryptoValue}
+          addFunc={addToAddedCrypto}
+          editMode={editMode}
           width="85%"
         ></AssetsList>
         ;

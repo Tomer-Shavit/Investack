@@ -3,7 +3,7 @@ import { HiChartPie } from "react-icons/hi";
 import { SiBitcoin } from "react-icons/si";
 import { BsFillGearFill } from "react-icons/bs";
 import { CgNotes } from "react-icons/cg";
-import { FaBell, FaPlus } from "react-icons/fa";
+import { FaBell, FaEdit, FaPlus, FaTimes } from "react-icons/fa";
 import { FaCaretDown } from "react-icons/fa";
 import { FaCaretUp } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
@@ -21,4 +21,6 @@ export const ICONS_TO_CLASSES = {
   home: FaHome,
   locked: FaLock,
   plus: FaPlus,
+  x: FaTimes,
+  edit: FaEdit,
 };

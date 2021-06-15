@@ -8,16 +8,13 @@ import { assetsData } from "../utils/dounut/chartData";
 import { portfolioSum } from "../utils/portfolioSum";
 
 interface doughNutProps {
-  myStocksPortfolio?: Record<string, FetchedAsset>;
-  myCryptoPortfolio?: Record<string, FetchedAsset>;
+  myPortfolio: Record<string, FetchedAsset>;
   colorList: string[];
 }
 
 export const DoughNut: React.FC<doughNutProps> = (props) => {
   const ref = useRef();
-  let initValue = portfolioSum(
-    props.myStocksPortfolio ? props.myStocksPortfolio : props.myCryptoPortfolio
-  );
+  let initValue = portfolioSum(props.myPortfolio);
   const [priceDisp, setPriceDisp] = useState(initValue);
   const [amount, setAmount] = useState(0);
   const [symbol, setSymbol] = useState("");
@@ -26,9 +23,7 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
   const chartData = {
     datasets: [
       {
-        data: props.myStocksPortfolio
-          ? assetsData(props.myStocksPortfolio)
-          : assetsData(props.myCryptoPortfolio),
+        data: assetsData(props.myPortfolio),
         backgroundColor: props.colorList,
         hoverOffset: 8,
         cutout: "85%",
@@ -51,24 +46,19 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
         enabled: false,
         external: (ctx) => {
           if (
-            Object.keys(ctx).length === 0 &&
-            Object.keys(props.myStocksPortfolio).length === 0
+            typeof ctx.tooltip.dataPoints == "undefined" ||
+            Object.keys(ctx).length === 0 ||
+            Object.keys(props.myPortfolio).length === 0
           ) {
             return;
           }
-
-          const symbol = props.myStocksPortfolio
-            ? Object.keys(props.myStocksPortfolio)[
-                ctx?.tooltip?.dataPoints[0]?.dataIndex
-              ]
-            : Object.keys(props.myCryptoPortfolio)[
-                ctx?.tooltip?.dataPoints[0]?.dataIndex
-              ];
+          const symbol = Object.keys(props.myPortfolio)[
+            ctx?.tooltip?.dataPoints[0]?.dataIndex
+          ];
           setPriceDisp(ctx.tooltip.dataPoints[0].raw);
           setSymbol(symbol);
-          props.myStocksPortfolio
-            ? setAmount(props.myStocksPortfolio[symbol].amount)
-            : setAmount(props.myCryptoPortfolio[symbol].amount);
+
+          setAmount(props.myPortfolio[symbol].amount);
           setColor(ctx.tooltip.labelColors[0].backgroundColor);
         },
       },
@@ -113,14 +103,11 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
             <Box as="span" fontSize="lg" color={color}>
               {symbol}
             </Box>
-            : {amount} {props.myStocksPortfolio ? "Shares" : "Tokens"}
+            : {amount} {props.myPortfolio ? "Shares" : "Tokens"}
           </Text>
         ) : (
           <Text color="textDark2" fontSize="xl">
-            {props.myStocksPortfolio
-              ? Object.keys(props.myStocksPortfolio).length
-              : Object.keys(props.myCryptoPortfolio).length}{" "}
-            Assets
+            {Object.keys(props.myPortfolio).length} Assets
           </Text>
         )}
       </Flex>

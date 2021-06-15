@@ -15,6 +15,7 @@ import { useContext } from "react";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import { CryptoContext } from "../context/CryptoContext";
 import { StocksContext } from "../context/StocksContext";
+import { useValidationToast } from "../utils/hooks/useValidationToast";
 
 import { InputFormField } from "./InputFormField";
 
@@ -28,39 +29,12 @@ interface AssetBoxProps {
 export const AssetBox: React.FC<AssetBoxProps> = (props) => {
   const { addToAddedStocks } = useContext(StocksContext);
   const { addToAddedCrypto } = useContext(CryptoContext);
-  const toast = useToast();
   const priceName = "price" + `${props.symbol}`;
   const sharesOrAmountName = "sharesOrAmount" + `${props.symbol}`;
+
   const [add, setAdd] = useState(0);
   let err = false;
-  const [error, setError] = useState(false);
-  const isInitialMount = useRef(true);
-
-  //validation toasts
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      setTimeout(() => {
-        if (err && add > 0) {
-          toast({
-            title: "Something went wrong.",
-            status: "error",
-            duration: 4000,
-            isClosable: true,
-          });
-        } else if (!err && add === 0) {
-          toast({
-            title: `${props.symbol} was added to your portfolio.`,
-            description: `Don't forget to save.`,
-            status: "success",
-            duration: 4000,
-            isClosable: true,
-          });
-        }
-      }, 500);
-    }
-  }, [add]);
+  useValidationToast({ add, err, symbol: props.symbol });
 
   return (
     <AccordionItem backgroundColor={props.bgColor} borderColor="borderDark2">
@@ -86,7 +60,6 @@ export const AssetBox: React.FC<AssetBoxProps> = (props) => {
               !values[sharesOrAmountName]
             ) {
               err = true;
-              console.log("errorFN: ", error);
               setErrors({
                 [sharesOrAmountName]: "Invalid input.",
               });
@@ -96,7 +69,7 @@ export const AssetBox: React.FC<AssetBoxProps> = (props) => {
               ) ||
               !values[priceName]
             ) {
-              setError(true);
+              err = true;
               setErrors({
                 [priceName]: "Invalid input.",
               });

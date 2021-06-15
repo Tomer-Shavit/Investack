@@ -63,8 +63,6 @@ const add: React.FC<sGettingStartedProps> = ({}) => {
               width="6rem"
               onClick={async () => {
                 try {
-                  console.log("addedCrypto: ", addedCrypto);
-                  console.log("cryptoValue: ", cryptoValue);
                   await addCrypto({
                     variables: { cryptoInput: addedCrypto },
                     refetchQueries: [{ query: MeDocument }],

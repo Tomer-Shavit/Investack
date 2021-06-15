@@ -1,16 +1,5 @@
-import { Flex } from "@chakra-ui/layout";
-import {
-  Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Tfoot,
-} from "@chakra-ui/react";
+import { Table, Tbody, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import React from "react";
-
 import { FetchedAsset } from "../types/FetchedAsset";
 import { AssetsListBox } from "./AssetsListBox";
 
@@ -18,10 +7,12 @@ interface AssetsListProps {
   width: string;
   assetsPortfolio: Record<string, FetchedAsset>;
   portfolioValue: number;
+  editMode: boolean;
+  addFunc: (symbol: any, amount: any, purchasePrice: any) => void;
 }
 
 export const AssetsList: React.FC<AssetsListProps> = (props) => {
-  const { assetsPortfolio, portfolioValue } = props;
+  const { assetsPortfolio, portfolioValue, editMode, addFunc } = props;
   return (
     <Table width={props.width}>
       <Thead>
@@ -39,8 +30,10 @@ export const AssetsList: React.FC<AssetsListProps> = (props) => {
         {Object.keys(assetsPortfolio).length > 0
           ? Object.keys(assetsPortfolio).map((symbol) => (
               <AssetsListBox
+                addFunc={addFunc}
                 asset={assetsPortfolio[symbol]}
                 value={portfolioValue}
+                editMode={editMode}
                 key={symbol}
               ></AssetsListBox>
             ))
