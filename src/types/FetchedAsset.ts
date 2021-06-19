@@ -2,10 +2,12 @@ export interface FetchedAsset {
   symbol: string;
   id?: string;
   name?: string;
-  amount: number;
-  value: number;
   price: number;
   change: number;
+  amount: number;
+  value: number;
   balance: number;
+  profitPercentage?: number;
+  portfolioPercentage?: number;
   color: string;
 }

@@ -32,7 +32,8 @@ const crypto: React.FC<StocksProps> = ({}) => {
     resetAddedCrypto,
   } = useContext(CryptoContext);
   let body;
-  useFetchCrypto(data, loading);
+
+  useFetchCrypto(data, loading, data?.me?.user?.portfolio?.cryptoValue);
 
   if (loading && loadingCrypto) {
     body = <Loader></Loader>;
@@ -62,10 +63,7 @@ const crypto: React.FC<StocksProps> = ({}) => {
       >
         <Flex width="85%" marginTop={3} marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
-          <DoughNut
-            myPortfolio={myCryptoPortfolio}
-            colorList={CRYPTO_COLOR_LIST}
-          ></DoughNut>
+          <DoughNut myPortfolio={myCryptoPortfolio}></DoughNut>
           <Flex flex={1} height="100%" justifyContent="flex-end">
             <Button
               display={editMode ? "none" : undefined}

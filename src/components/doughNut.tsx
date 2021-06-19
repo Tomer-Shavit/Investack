@@ -1,5 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 
 import { FetchedAsset } from "../types/FetchedAsset";
@@ -9,7 +10,6 @@ import { portfolioSum } from "../utils/portfolioSum";
 
 interface doughNutProps {
   myPortfolio: Record<string, FetchedAsset>;
-  colorList: string[];
 }
 
 export const DoughNut: React.FC<doughNutProps> = (props) => {
@@ -20,11 +20,19 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
   const [symbol, setSymbol] = useState("");
   const [color, setColor] = useState("#fff");
 
+  useEffect(() => {
+    const a = "cbc";
+    const b = "bcd";
+    console.log(a < b);
+  }, []);
+
   const chartData = {
     datasets: [
       {
         data: assetsData(props.myPortfolio),
-        backgroundColor: props.colorList,
+        backgroundColor: Object.keys(props.myPortfolio).map(
+          (symbol) => props.myPortfolio[symbol].color
+        ),
         hoverOffset: 8,
         cutout: "85%",
         radius: "95%",

@@ -20,13 +20,7 @@ export const AssetsListBox: React.FC<AssetsListBoxProps> = ({
 }) => {
   const avgCost = asset.value / asset.amount;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  useEffect(() => {
-    console.log("symbol: ", asset.symbol);
-    console.log("value: ", asset.value);
-    console.log("price: ", asset.price);
-    console.log("amount: ", asset.amount);
-    console.log("----------------------");
-  }, []);
+
   return (
     <Tr color="textDark" position="relative">
       <Td borderBottomColor="borderDark2" marginRight="auto">

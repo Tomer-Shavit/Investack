@@ -6,6 +6,7 @@ import { useMeQuery } from "../generated/graphql";
 import { ICONS_TO_CLASSES } from "../constants/icons";
 import { useRouter } from "next/router";
 import { FullPortfolio } from "../components/fullPortfolio";
+import { Loader } from "../components/loader/Loader";
 
 const Index = () => {
   const { data, loading } = useMeQuery();
@@ -14,7 +15,7 @@ const Index = () => {
 
   if (loading) {
     //page loading
-    body = null;
+    body = <Loader></Loader>;
   } else if (
     // No portfolios
     !data.me?.user?.portfolio?.stocks.length &&

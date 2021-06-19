@@ -12,7 +12,7 @@ interface CryptoContextTypes {
   cryptoValue: number;
   loadingCrypto: boolean;
   myCryptoPortfolio: Record<string, FetchedAsset>;
-  createCryptoPortfolio: (fetchedCrypto, dbCrypto) => void;
+  createCryptoPortfolio: (fetchedCrypto, dbCrypto, totalValue) => void;
 }
 
 const cryptoDefaultValues = {
@@ -38,7 +38,11 @@ export const CryptoProvider = ({ children }) => {
     Record<string, FetchedAsset>
   >({});
 
-  const createCryptoPortfolio = (fetchedCrypto, dbCrypto: CryptoInput[]) => {
+  const createCryptoPortfolio = (
+    fetchedCrypto,
+    dbCrypto: CryptoInput[],
+    totalValue
+  ) => {
     if (Object.keys(fetchedCrypto).length === 0 || dbCrypto.length === 0) {
       //doNothing
       return;
@@ -57,6 +61,7 @@ export const CryptoProvider = ({ children }) => {
             price: fetchedCrypto[crypto.symbol].price,
             change: fetchedCrypto[crypto.symbol].change,
             balance: crypto.amount * fetchedCrypto[crypto.symbol].price,
+
             color: CRYPTO_COLOR_LIST[i],
           },
         }));

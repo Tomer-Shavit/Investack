@@ -22,7 +22,7 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
   const { myStocksPortfolio, stocksValue } = useContext(StocksContext);
   const { myCryptoPortfolio, cryptoValue } = useContext(CryptoContext);
   useFetchStocks(data, loading);
-  useFetchCrypto(data, loading);
+  useFetchCrypto(data, loading, cryptoValue);
 
   return (
     <Flex
@@ -35,7 +35,6 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
         <Flex flex={1}></Flex>
         <DoughNut
           myPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
-          colorList={STOCKS_COLOR_LIST}
         ></DoughNut>
         <Flex flex={1} height="100%"></Flex>
       </Flex>
