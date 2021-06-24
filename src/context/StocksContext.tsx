@@ -3,6 +3,7 @@ import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { ALL_STOCKS } from "../constants/Stocks 05-06-2021";
 import { Stock, StocksInput } from "../generated/graphql";
 import { FetchedAsset } from "../types/FetchedAsset";
+import { calcProfitPercentage } from "../utils/calcProfitPercentage";
 
 interface StocksContextTypes {
   allStocks: Record<string, Record<string, string>>;
@@ -12,7 +13,7 @@ interface StocksContextTypes {
   stocksValue: number;
   resetAddedStocks: () => void;
   myStocksPortfolio: Record<string, FetchedAsset>;
-  createStocksPortfolio: (fetchedStocks, dbStocks) => void;
+  createStocksPortfolio: (fetchedStocks, dbStocks, totalValue) => void;
   loadingStocks: boolean;
 }
 
@@ -43,7 +44,11 @@ export const StocksProvider = ({ children }) => {
     setStocksValue((prev) => prev + amount * pricePerShare);
   };
 
-  const createStocksPortfolio = (fetchedStocks, dbStocks: Stock[]) => {
+  const createStocksPortfolio = (
+    fetchedStocks,
+    dbStocks: Stock[],
+    totalValue: number
+  ) => {
     if (Object.keys(fetchedStocks).length === 0 || dbStocks.length === 0) {
       //doNothing
       return;
@@ -61,6 +66,11 @@ export const StocksProvider = ({ children }) => {
             price: fetchedStocks[stock.symbol].close,
             change: fetchedStocks[stock.symbol].percent_change,
             balance: stock.amount * fetchedStocks[stock.symbol].close,
+            profitPercentage: calcProfitPercentage(
+              fetchedStocks[stock.symbol].close,
+              stock.value,
+              stock.amount
+            ),
             color: STOCKS_COLOR_LIST[i],
           },
         }));
@@ -74,6 +84,11 @@ export const StocksProvider = ({ children }) => {
             price: fetchedStocks[stock.symbol].close,
             value: stock.value,
             change: fetchedStocks[stock.symbol].percent_change,
+            profitPercentage: calcProfitPercentage(
+              fetchedStocks[stock.symbol].close,
+              stock.value,
+              stock.amount
+            ),
             balance: stock.amount * fetchedStocks[stock.symbol].close,
           },
         }));

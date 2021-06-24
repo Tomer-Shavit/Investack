@@ -3,6 +3,7 @@ import { CRYPTO_COLOR_LIST } from "../constants/colorList";
 import { ALL_CRYPTO } from "../constants/Crypto 05-06-2021";
 import { CryptoInput } from "../generated/graphql";
 import { FetchedAsset } from "../types/FetchedAsset";
+import { calcProfitPercentage } from "../utils/calcProfitPercentage";
 
 interface CryptoContextTypes {
   allCrypto: {};
@@ -61,7 +62,11 @@ export const CryptoProvider = ({ children }) => {
             price: fetchedCrypto[crypto.symbol].price,
             change: fetchedCrypto[crypto.symbol].change,
             balance: crypto.amount * fetchedCrypto[crypto.symbol].price,
-
+            profitPercentage: calcProfitPercentage(
+              fetchedCrypto[crypto.symbol].price,
+              crypto.value,
+              crypto.amount
+            ),
             color: CRYPTO_COLOR_LIST[i],
           },
         }));
@@ -75,6 +80,11 @@ export const CryptoProvider = ({ children }) => {
             price: fetchedCrypto[crypto.symbol].price,
             value: crypto.value,
             change: fetchedCrypto[crypto.symbol].change,
+            profitPercentage: calcProfitPercentage(
+              fetchedCrypto[crypto.symbol].price,
+              crypto.value,
+              crypto.amount
+            ),
             balance: crypto.amount * fetchedCrypto[crypto.symbol].price,
           },
         }));

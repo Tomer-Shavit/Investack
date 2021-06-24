@@ -38,12 +38,9 @@ export const AssetsListBox: React.FC<AssetsListBoxProps> = ({
 
       <Td
         borderBottomColor="borderDark2"
-        color={avgCost < asset.price ? "#6ede8a" : "#fe4d55"}
+        color={asset.profitPercentage >= 0 ? "#6ede8a" : "#fe4d55"}
       >
-        {avgCost < asset.price
-          ? ((100 * asset.price) / avgCost - 100).toFixed(2)
-          : ((-100 * asset.price) / avgCost).toFixed(2)}
-        %
+        {asset.profitPercentage.toFixed(2)}%
       </Td>
 
       <Td isNumeric borderBottomColor="borderDark2" color={asset.color}>

@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/layout";
 import React from "react";
 import { useMeQuery } from "../generated/graphql";
+import { ChartLoader } from "./chartLoader/chartLoader";
 import { Loader } from "./loader/Loader";
 import { LockedContent } from "./LockedContent";
 
@@ -13,7 +14,7 @@ export const LockedContentContainer: React.FC<LockedContentContainerProps> = ({
   let body;
 
   if (loading) {
-    body = <Loader></Loader>;
+    body = <ChartLoader></ChartLoader>;
   } else if (!data.me && !loading) {
     body = <LockedContent></LockedContent>;
   } else if (data.me) {

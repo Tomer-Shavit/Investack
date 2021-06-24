@@ -23,4 +23,6 @@ export const ICONS_TO_CLASSES = {
   plus: FaPlus,
   x: FaTimes,
   edit: FaEdit,
+  caretUp: FaCaretUp,
+  caretDown: FaCaretDown,
 };

@@ -1,19 +1,17 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { AssetsList } from "../components/AssetsList";
+import { ChartLoader } from "../components/chartLoader/chartLoader";
+import { DoughNut } from "../components/doughNut";
 import { Loader } from "../components/loader/Loader";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
+import { StocksContext } from "../context/StocksContext";
 import {
   useAddStocksToPortfolioMutation,
   useMeQuery,
 } from "../generated/graphql";
-import axios from "axios";
-import { assetsToString } from "../utils/assetsToString";
-import { AssetsList } from "../components/AssetsList";
-import { StocksContext } from "../context/StocksContext";
-import { DoughNut } from "../components/doughNut";
-import { STOCKS_COLOR_LIST } from "../constants/colorList";
 import { useFetchStocks } from "../utils/hooks/useFetchStocks";
 
 interface StocksProps {}
@@ -32,11 +30,12 @@ const stocks: React.FC<StocksProps> = ({}) => {
     resetAddedStocks,
   } = useContext(StocksContext);
 
+  useFetchStocks(data, loading, stocksValue);
+
   let body;
-  useFetchStocks(loading, data);
 
   if (loading) {
-    body = <Loader></Loader>;
+    body = <ChartLoader></ChartLoader>;
   } else if (!loading && data?.me?.user?.portfolio?.stocks.length === 0) {
     body = (
       <Flex flexDirection="column" alignItems="center" marginTop="120px">
@@ -54,9 +53,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
         </Button>
       </Flex>
     );
-  } else if (!loading && loadingStocks) {
-    body = <Loader></Loader>;
-  } else if (!loading && data?.me?.user?.portfolio?.stocks) {
+  } else if (!loading && data?.me?.user?.portfolio?.stocks.length > 0) {
     body = (
       <Flex
         alignItems="center"
@@ -65,10 +62,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
       >
         <Flex width="85%" marginBottom={3} alignItems="center">
           <Flex flex={1}></Flex>
-          <DoughNut
-            myPortfolio={myStocksPortfolio}
-            colorList={STOCKS_COLOR_LIST}
-          ></DoughNut>
+          <DoughNut myPortfolio={myStocksPortfolio}></DoughNut>
           <Flex flex={1} height="100%" justifyContent="flex-end">
             <Button
               display={editMode ? "none" : undefined}
@@ -117,6 +111,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
           assetsPortfolio={myStocksPortfolio}
           portfolioValue={stocksValue}
           editMode={editMode}
+          loadingStocks={loadingStocks}
           width="85%"
         ></AssetsList>
       </Flex>

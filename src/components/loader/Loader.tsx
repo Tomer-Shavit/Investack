@@ -12,6 +12,7 @@ export const Loader: React.FC<LoaderProps> = ({}) => {
       justifyContent="center"
       alignItems="center"
       height="50%"
+      margin="0"
     >
       <div className={styles.loader}></div>
     </Flex>

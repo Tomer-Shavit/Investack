@@ -1,19 +1,17 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { AssetsList } from "../components/AssetsList";
+import { ChartLoader } from "../components/chartLoader/chartLoader";
+import { DoughNut } from "../components/doughNut";
 import { Loader } from "../components/loader/Loader";
 import { LockedContentContainer } from "../components/LockedContentContainer";
 import { PageLayout } from "../components/PageLayout";
+import { CryptoContext } from "../context/CryptoContext";
 import {
   useAddCryptoToPortfolioMutation,
   useMeQuery,
 } from "../generated/graphql";
-import axios from "axios";
-import { assetsToString } from "../utils/assetsToString";
-import { AssetsList } from "../components/AssetsList";
-import { DoughNut } from "../components/doughNut";
-import { CryptoContext } from "../context/CryptoContext";
-import { CRYPTO_COLOR_LIST } from "../constants/colorList";
 import { useFetchCrypto } from "../utils/hooks/useFetchCrypto";
 
 interface StocksProps {}
@@ -35,8 +33,8 @@ const crypto: React.FC<StocksProps> = ({}) => {
 
   useFetchCrypto(data, loading, data?.me?.user?.portfolio?.cryptoValue);
 
-  if (loading && loadingCrypto) {
-    body = <Loader></Loader>;
+  if (loading || loadingCrypto) {
+    body = <ChartLoader></ChartLoader>;
   } else if (!loading && data?.me?.user?.portfolio.crypto.length === 0) {
     body = (
       <Flex flexDirection="column" alignItems="center" marginTop="120px">
@@ -113,8 +111,8 @@ const crypto: React.FC<StocksProps> = ({}) => {
           addFunc={addToAddedCrypto}
           editMode={editMode}
           width="85%"
+          loadingCrypto={loadingCrypto}
         ></AssetsList>
-        ;
       </Flex>
     );
   }

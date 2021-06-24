@@ -1,8 +1,20 @@
-import { Flex, Table, Tbody, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Flex,
+  Icon,
+  Table,
+  Tbody,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { ICONS_TO_CLASSES } from "../constants/icons";
+import { TABLE_HEADERS } from "../constants/tableHeaders";
 import { FetchedAsset } from "../types/FetchedAsset";
+import { createSortedPortfolio } from "../utils/createSortedPortfolio";
 import { AssetsListBox } from "./AssetsListBox";
-import { Loader } from "./loader/Loader";
+import { ChartLoader } from "./chartLoader/chartLoader";
 
 interface AssetsListProps {
   width: string;
@@ -10,71 +22,115 @@ interface AssetsListProps {
   portfolioValue: number;
   editMode?: boolean;
   addFunc?: (symbol: any, amount: any, purchasePrice: any) => void;
+  loadingStocks?: boolean;
+  loadingCrypto?: boolean;
 }
 
 export const AssetsList: React.FC<AssetsListProps> = (props) => {
-  const { assetsPortfolio, portfolioValue, editMode, addFunc } = props;
-  const [myPortfolio, setMyPortfolio] = useState(
-    Object.values(assetsPortfolio)
-  );
+  const {
+    assetsPortfolio,
+    portfolioValue,
+    editMode,
+    addFunc,
+    loadingStocks,
+    loadingCrypto,
+  } = props;
+  const [myPortfolio, setMyPortfolio] = useState<undefined | FetchedAsset[]>();
+  const [ascending, setAscending] = useState(["ascending", ""]);
 
   useEffect(() => {
-    console.log(myPortfolio);
-    // Object.values(assetsPortfolio).sort((a, b) => {
-    //   console.log("a", a);
-    //   console.log("b", b);
-    //   return 0;
-    // });
-  }, []);
+    console.log(loadingStocks, loadingCrypto);
+  }, [loadingCrypto]);
 
-  // const sortColumn(prop:string) => {
-  //    let newPortfolio = myPortfolio.sort((a,b) => {
-  //     const assetA = a[prop]
-  //     const assetB = b[prop]
-  //     if(assetA>assetB){
-  //       return 1
-  //     }
-  //     if(assetA < assetB){
-  //       return -1
-  //     }
-  //     return 0
-  //   })
-
-  // }
+  let body;
+  if (loadingStocks || loadingCrypto) {
+    body = <ChartLoader></ChartLoader>;
+  } else if (!loadingStocks && !loadingCrypto) {
+    body = (
+      <Table width={props.width}>
+        <Thead>
+          <Tr>
+            {TABLE_HEADERS.map((header, i) => (
+              <Th
+                cursor="pointer"
+                key={i}
+                paddingRight={
+                  Object.values(header)[0] === "Portfolio %" ? "0" : undefined
+                }
+                onClick={() => {
+                  setMyPortfolio(
+                    createSortedPortfolio(
+                      Object.keys(header)[0],
+                      assetsPortfolio,
+                      ascending[0]
+                    )
+                  );
+                  let status =
+                    ascending[0] === "ascending" ? "descending" : "ascending";
+                  let name = Object.values(header)[0];
+                  setAscending([status, name]);
+                }}
+              >
+                <Flex alignItems="center">
+                  <Flex flexDirection="column">
+                    <Icon
+                      as={ICONS_TO_CLASSES["caretUp"]}
+                      marginBottom="-3px"
+                      color={
+                        ascending[0] === "descending" &&
+                        ascending[1] === Object.values(header)[0]
+                          ? "#1FC7D4"
+                          : undefined
+                      }
+                    ></Icon>
+                    <Icon
+                      color={
+                        ascending[0] === "ascending" &&
+                        ascending[1] === Object.values(header)[0]
+                          ? "#1FC7D4"
+                          : undefined
+                      }
+                      marginTop="-3px"
+                      as={ICONS_TO_CLASSES["caretDown"]}
+                    ></Icon>
+                  </Flex>
+                  <Flex marginLeft={1}>{Object.values(header)[0]}</Flex>
+                </Flex>
+              </Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody position="relative">
+          {!myPortfolio
+            ? Object.keys(assetsPortfolio).map((symbol) => (
+                <AssetsListBox
+                  addFunc={addFunc}
+                  asset={assetsPortfolio[symbol]}
+                  value={portfolioValue}
+                  editMode={editMode}
+                  key={symbol}
+                ></AssetsListBox>
+              ))
+            : myPortfolio.map((asset) => (
+                <AssetsListBox
+                  addFunc={addFunc}
+                  asset={asset}
+                  value={portfolioValue}
+                  editMode={editMode}
+                  key={asset.symbol}
+                ></AssetsListBox>
+              ))}
+        </Tbody>
+        <Tfoot>
+          <Tr></Tr>
+        </Tfoot>
+      </Table>
+    );
+  }
 
   return (
-    <Table width={props.width}>
-      <Thead>
-        <Tr>
-          <Th>Asset Name</Th>
-          <Th>Price</Th>
-          <Th>24H Change</Th>
-          <Th>Shares</Th>
-          <Th>Value</Th>
-          <Th>Total Profit</Th>
-          <Th isNumeric>Portfolio %</Th>
-        </Tr>
-      </Thead>
-      <Tbody position="relative">
-        {Object.keys(assetsPortfolio).length > 0 ? (
-          Object.keys(assetsPortfolio).map((symbol) => (
-            <AssetsListBox
-              addFunc={addFunc}
-              asset={assetsPortfolio[symbol]}
-              value={portfolioValue}
-              editMode={editMode}
-              key={symbol}
-            ></AssetsListBox>
-          ))
-        ) : (
-          <Flex position="absolute" left="50%">
-            <Loader></Loader>
-          </Flex>
-        )}
-      </Tbody>
-      <Tfoot>
-        <Tr></Tr>
-      </Tfoot>
-    </Table>
+    <Flex width="100%" justifyContent="center">
+      {body}
+    </Flex>
   );
 };

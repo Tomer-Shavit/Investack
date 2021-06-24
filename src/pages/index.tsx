@@ -1,12 +1,12 @@
 import { Box, Flex, Heading, Icon } from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { Card } from "../components/Card";
-import { PageLayout } from "../components/PageLayout";
-import { useMeQuery } from "../generated/graphql";
-import { ICONS_TO_CLASSES } from "../constants/icons";
 import { useRouter } from "next/router";
+import React from "react";
+import { Card } from "../components/Card";
+import { ChartLoader } from "../components/chartLoader/chartLoader";
 import { FullPortfolio } from "../components/fullPortfolio";
-import { Loader } from "../components/loader/Loader";
+import { PageLayout } from "../components/PageLayout";
+import { ICONS_TO_CLASSES } from "../constants/icons";
+import { useMeQuery } from "../generated/graphql";
 
 const Index = () => {
   const { data, loading } = useMeQuery();
@@ -15,7 +15,7 @@ const Index = () => {
 
   if (loading) {
     //page loading
-    body = <Loader></Loader>;
+    body = <ChartLoader></ChartLoader>;
   } else if (
     // No portfolios
     !data.me?.user?.portfolio?.stocks.length &&

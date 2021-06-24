@@ -20,12 +20,6 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
   const [symbol, setSymbol] = useState("");
   const [color, setColor] = useState("#fff");
 
-  useEffect(() => {
-    const a = "cbc";
-    const b = "bcd";
-    console.log(a < b);
-  }, []);
-
   const chartData = {
     datasets: [
       {

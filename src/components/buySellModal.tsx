@@ -72,7 +72,7 @@ export const BuySellModal: React.FC<buySellModalProps> = (props) => {
           <Formik
             initialValues={{ amount: "", price: "" }}
             onSubmit={async (values, { setErrors }) => {
-              if (parseInt(values.amount) > amount) {
+              if (parseInt(values.amount) > amount && isSell == "1") {
                 err = true;
                 setErrors({ amount: `Not enough ${symbol}` });
               } else if (

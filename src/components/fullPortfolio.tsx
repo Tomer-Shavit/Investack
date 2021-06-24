@@ -19,8 +19,10 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
   data,
   loading,
 }) => {
-  const { myStocksPortfolio, stocksValue } = useContext(StocksContext);
-  const { myCryptoPortfolio, cryptoValue } = useContext(CryptoContext);
+  const { myStocksPortfolio, stocksValue, loadingStocks } =
+    useContext(StocksContext);
+  const { myCryptoPortfolio, cryptoValue, loadingCrypto } =
+    useContext(CryptoContext);
   useFetchStocks(data, loading);
   useFetchCrypto(data, loading, cryptoValue);
 
@@ -40,6 +42,8 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
       </Flex>
       <AssetsList
         assetsPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
+        loadingCrypto={loadingCrypto}
+        loadingStocks={loadingStocks}
         portfolioValue={stocksValue + cryptoValue}
         width="85%"
       ></AssetsList>
