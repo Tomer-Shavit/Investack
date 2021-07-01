@@ -14,12 +14,11 @@ const Index = () => {
   let body;
 
   if (loading) {
-    //page loading
     body = <ChartLoader></ChartLoader>;
   } else if (
     // No portfolios
-    !data.me?.user?.portfolio?.stocks.length &&
-    !data.me?.user?.portfolio?.crypto.length &&
+    !data?.me?.user?.portfolio?.crypto.length &&
+    !data?.me?.user?.portfolio?.stocks.length &&
     !loading
   ) {
     body = (
@@ -31,7 +30,9 @@ const Index = () => {
           <Card
             pointer
             onClick={() => {
-              data?.me?.user ? router.push("/crypto") : router.push("/login");
+              data?.me?.user
+                ? router.push("/crypto/add")
+                : router.push("/login");
             }}
           >
             <Flex
@@ -82,9 +83,9 @@ const Index = () => {
   }
 
   return (
-    <Box>
+    <Flex flexDirection="column">
       <PageLayout>{body}</PageLayout>
-    </Box>
+    </Flex>
   );
 };
 

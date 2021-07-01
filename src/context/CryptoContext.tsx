@@ -11,7 +11,7 @@ interface CryptoContextTypes {
   addToAddedCrypto: (symbol, amount, purchasePrice) => void;
   resetAddedCrypto: () => void;
   cryptoValue: number;
-  loadingCrypto: boolean;
+  doneLoadingCrypto: boolean;
   myCryptoPortfolio: Record<string, FetchedAsset>;
   createCryptoPortfolio: (fetchedCrypto, dbCrypto, totalValue) => void;
 }
@@ -24,7 +24,7 @@ const cryptoDefaultValues = {
   cryptoValue: 0,
   myCryptoPortfolio: {},
   createCryptoPortfolio: () => {},
-  loadingCrypto: true,
+  doneLoadingCrypto: false,
 };
 
 export const CryptoContext =
@@ -34,7 +34,7 @@ export const CryptoProvider = ({ children }) => {
   const allCrypto = ALL_CRYPTO;
   const [addedCrypto, setAddedCrypto] = useState([]);
   const [cryptoValue, setCryptoValue] = useState(0);
-  const [loadingCrypto, setLoadingCrypto] = useState(true);
+  const [doneLoadingCrypto, setDoneLoadingCrypto] = useState(false);
   const [myCryptoPortfolio, setMyCryptoPortfolio] = useState<
     Record<string, FetchedAsset>
   >({});
@@ -48,7 +48,7 @@ export const CryptoProvider = ({ children }) => {
       //doNothing
       return;
     }
-    setLoadingCrypto(true);
+    setDoneLoadingCrypto(false);
     dbCrypto.forEach((crypto, i) => {
       if (!(crypto.symbol in myCryptoPortfolio)) {
         setMyCryptoPortfolio((myCryptoPortfolio) => ({
@@ -91,7 +91,7 @@ export const CryptoProvider = ({ children }) => {
         calcValue(crypto.amount, fetchedCrypto[crypto.symbol].price);
       }
     });
-    setLoadingCrypto(false);
+    setDoneLoadingCrypto(true);
   };
 
   const calcValue = (amount, purchasePrice) => {
@@ -118,7 +118,7 @@ export const CryptoProvider = ({ children }) => {
         addToAddedCrypto,
         resetAddedCrypto,
         cryptoValue,
-        loadingCrypto,
+        doneLoadingCrypto: doneLoadingCrypto,
         createCryptoPortfolio,
         myCryptoPortfolio,
       }}

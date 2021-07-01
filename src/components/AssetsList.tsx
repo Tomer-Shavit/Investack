@@ -21,9 +21,10 @@ interface AssetsListProps {
   assetsPortfolio: Record<string, FetchedAsset>;
   portfolioValue: number;
   editMode?: boolean;
+  type: string;
   addFunc?: (symbol: any, amount: any, purchasePrice: any) => void;
-  loadingStocks?: boolean;
-  loadingCrypto?: boolean;
+  doneLoadingStocks?: boolean;
+  doneLoadingCrypto?: boolean;
 }
 
 export const AssetsList: React.FC<AssetsListProps> = (props) => {
@@ -32,20 +33,30 @@ export const AssetsList: React.FC<AssetsListProps> = (props) => {
     portfolioValue,
     editMode,
     addFunc,
-    loadingStocks,
-    loadingCrypto,
+    doneLoadingStocks,
+    doneLoadingCrypto,
+    type,
   } = props;
   const [myPortfolio, setMyPortfolio] = useState<undefined | FetchedAsset[]>();
   const [ascending, setAscending] = useState(["ascending", ""]);
 
-  useEffect(() => {
-    console.log(loadingStocks, loadingCrypto);
-  }, [loadingCrypto]);
+  let doneLoading;
+  if (type === "stocks") {
+    doneLoading = doneLoadingStocks;
+  } else if (type === "crypto") {
+    doneLoading = doneLoadingCrypto;
+  } else if (type === "both") {
+    if (doneLoadingCrypto && doneLoadingStocks) {
+      doneLoading = true;
+    } else {
+      doneLoading = false;
+    }
+  }
 
   let body;
-  if (loadingStocks || loadingCrypto) {
+  if (!doneLoading) {
     body = <ChartLoader></ChartLoader>;
-  } else if (!loadingStocks && !loadingCrypto) {
+  } else {
     body = (
       <Table width={props.width}>
         <Thead>

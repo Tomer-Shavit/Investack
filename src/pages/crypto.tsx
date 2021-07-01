@@ -23,7 +23,7 @@ const crypto: React.FC<StocksProps> = ({}) => {
   const [addCrypto] = useAddCryptoToPortfolioMutation();
   const {
     myCryptoPortfolio,
-    loadingCrypto,
+    doneLoadingCrypto,
     cryptoValue,
     addedCrypto,
     addToAddedCrypto,
@@ -33,9 +33,9 @@ const crypto: React.FC<StocksProps> = ({}) => {
 
   useFetchCrypto(data, loading, data?.me?.user?.portfolio?.cryptoValue);
 
-  if (loading || loadingCrypto) {
+  if (loading) {
     body = <ChartLoader></ChartLoader>;
-  } else if (!loading && data?.me?.user?.portfolio.crypto.length === 0) {
+  } else if (!loading && data?.me?.user?.portfolio?.crypto?.length === 0) {
     body = (
       <Flex flexDirection="column" alignItems="center" marginTop="120px">
         <Text color="textDark2" fontSize="lg">
@@ -52,7 +52,7 @@ const crypto: React.FC<StocksProps> = ({}) => {
         </Button>
       </Flex>
     );
-  } else if (!loading && data?.me?.user?.portfolio?.crypto.length > 0) {
+  } else if (!loading && data?.me?.user?.portfolio?.crypto?.length > 0) {
     body = (
       <Flex
         alignItems="center"
@@ -111,7 +111,8 @@ const crypto: React.FC<StocksProps> = ({}) => {
           addFunc={addToAddedCrypto}
           editMode={editMode}
           width="85%"
-          loadingCrypto={loadingCrypto}
+          doneLoadingCrypto={doneLoadingCrypto}
+          type="crypto"
         ></AssetsList>
       </Flex>
     );

@@ -19,21 +19,36 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
   data,
   loading,
 }) => {
-  const { myStocksPortfolio, stocksValue, loadingStocks } =
+  const { myStocksPortfolio, stocksValue, doneLoadingStocks } =
     useContext(StocksContext);
-  const { myCryptoPortfolio, cryptoValue, loadingCrypto } =
+  const { myCryptoPortfolio, cryptoValue, doneLoadingCrypto } =
     useContext(CryptoContext);
-  useFetchStocks(data, loading);
+  useFetchStocks(data, doneLoadingStocks, stocksValue);
   useFetchCrypto(data, loading, cryptoValue);
+
+  let portfolioType = "both";
+
+  if (doneLoadingCrypto && !Object.keys(myStocksPortfolio).length) {
+    portfolioType = "crypto";
+  } else if (doneLoadingStocks && !Object.keys(myCryptoPortfolio.length)) {
+    portfolioType = "stocks";
+  }
 
   return (
     <Flex
       alignItems="center"
       flexDirection="column"
-      justifyContent="space-between"
       width="100%"
+      paddingTop={0}
+      p={5}
     >
-      <Flex width="85%" marginBottom={3} alignItems="center">
+      <Flex
+        height="380px"
+        width="85%"
+        alignItems="center"
+        justifyContent="flex-end"
+        marginBottom={3}
+      >
         <Flex flex={1}></Flex>
         <DoughNut
           myPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
@@ -42,12 +57,12 @@ export const FullPortfolio: React.FC<fullPortfolioProps> = ({
       </Flex>
       <AssetsList
         assetsPortfolio={{ ...myStocksPortfolio, ...myCryptoPortfolio }}
-        loadingCrypto={loadingCrypto}
-        loadingStocks={loadingStocks}
+        doneLoadingCrypto={doneLoadingCrypto}
+        doneLoadingStocks={doneLoadingStocks}
         portfolioValue={stocksValue + cryptoValue}
         width="85%"
+        type={portfolioType}
       ></AssetsList>
-      ;
     </Flex>
   );
 };

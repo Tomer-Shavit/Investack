@@ -22,7 +22,7 @@ const stocks: React.FC<StocksProps> = ({}) => {
   const { data, loading } = useMeQuery();
   const [editMode, setEditMode] = useState(false);
   const {
-    loadingStocks,
+    doneLoadingStocks,
     myStocksPortfolio,
     stocksValue,
     addToAddedStocks,
@@ -111,8 +111,9 @@ const stocks: React.FC<StocksProps> = ({}) => {
           assetsPortfolio={myStocksPortfolio}
           portfolioValue={stocksValue}
           editMode={editMode}
-          loadingStocks={loadingStocks}
+          doneLoadingStocks={doneLoadingStocks}
           width="85%"
+          type="stocks"
         ></AssetsList>
       </Flex>
     );

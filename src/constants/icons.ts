@@ -1,18 +1,26 @@
-import { HiTrendingUp } from "react-icons/hi";
-import { HiChartPie } from "react-icons/hi";
-import { SiBitcoin } from "react-icons/si";
 import { BsFillGearFill } from "react-icons/bs";
 import { CgNotes } from "react-icons/cg";
-import { FaBell, FaEdit, FaPlus, FaTimes } from "react-icons/fa";
-import { FaCaretDown } from "react-icons/fa";
-import { FaCaretUp } from "react-icons/fa";
-import { FaHome } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
+import {
+  FaBell,
+  FaCaretDown,
+  FaCaretUp,
+  FaEdit,
+  FaHistory,
+  FaHome,
+  FaLock,
+  FaPlus,
+  FaTimes,
+  FaUser,
+} from "react-icons/fa";
+import { HiChartPie, HiTrendingUp } from "react-icons/hi";
+import { SiBitcoin } from "react-icons/si";
 
 export const ICONS_TO_CLASSES = {
   portfolio: HiChartPie,
   stocks: HiTrendingUp,
   crypto: SiBitcoin,
+  history: FaHistory,
+  account: FaUser,
   settings: BsFillGearFill,
   notes: CgNotes,
   news: FaBell,

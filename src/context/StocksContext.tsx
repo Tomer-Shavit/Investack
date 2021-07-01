@@ -14,7 +14,7 @@ interface StocksContextTypes {
   resetAddedStocks: () => void;
   myStocksPortfolio: Record<string, FetchedAsset>;
   createStocksPortfolio: (fetchedStocks, dbStocks, totalValue) => void;
-  loadingStocks: boolean;
+  doneLoadingStocks: boolean;
 }
 
 export const contextDefaultValues: StocksContextTypes = {
@@ -25,7 +25,7 @@ export const contextDefaultValues: StocksContextTypes = {
   resetAddedStocks: () => {},
   myStocksPortfolio: {},
   createStocksPortfolio: () => {},
-  loadingStocks: true,
+  doneLoadingStocks: false,
 };
 
 export const StocksContext =
@@ -34,7 +34,7 @@ export const StocksContext =
 export const StocksProvider = ({ children }) => {
   const [addedStocks, setAddedStocks] = useState([]);
   const [stocksValue, setStocksValue] = useState(0);
-  const [loadingStocks, setLoadingStocks] = useState(true);
+  const [doneLoadingStocks, setDoneLoadingStocks] = useState(false);
   const [myStocksPortfolio, setMyStocksPortfolio] = useState<
     Record<string, FetchedAsset>
   >({});
@@ -53,7 +53,7 @@ export const StocksProvider = ({ children }) => {
       //doNothing
       return;
     }
-    setLoadingStocks(true);
+    setDoneLoadingStocks(false);
     dbStocks.forEach((stock, i) => {
       if (!(stock.symbol in myStocksPortfolio)) {
         setMyStocksPortfolio((myStocksPortfolio) => ({
@@ -95,7 +95,7 @@ export const StocksProvider = ({ children }) => {
         calcValue(stock.amount, fetchedStocks[stock.symbol].close);
       }
     });
-    setLoadingStocks(false);
+    setDoneLoadingStocks(true);
   };
 
   const resetAddedStocks = () => {
@@ -121,7 +121,7 @@ export const StocksProvider = ({ children }) => {
         resetAddedStocks,
         myStocksPortfolio,
         createStocksPortfolio,
-        loadingStocks,
+        doneLoadingStocks: doneLoadingStocks,
       }}
     >
       {children}

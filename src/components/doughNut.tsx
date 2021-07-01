@@ -1,10 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
-import { useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
-
 import { FetchedAsset } from "../types/FetchedAsset";
-
 import { assetsData } from "../utils/dounut/chartData";
 import { portfolioSum } from "../utils/portfolioSum";
 
@@ -105,7 +102,7 @@ export const DoughNut: React.FC<doughNutProps> = (props) => {
             <Box as="span" fontSize="lg" color={color}>
               {symbol}
             </Box>
-            : {amount} {props.myPortfolio ? "Shares" : "Tokens"}
+            : {" " + amount}
           </Text>
         ) : (
           <Text color="textDark2" fontSize="xl">

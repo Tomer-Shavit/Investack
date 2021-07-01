@@ -16,7 +16,6 @@ export const useFetchStocks = (data, loading, totalValue) => {
         const fetchedStocks = await axios.get(
           `/api/stocks?myStocks=${myStocks}`
         );
-        console.log("fetchedStocks: ", fetchedStocks);
         createStocksPortfolio(
           fetchedStocks.data,
           data?.me?.user?.portfolio?.stocks,

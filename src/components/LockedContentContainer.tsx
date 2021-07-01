@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/layout";
 import React from "react";
+import { useEffect } from "react";
 import { useMeQuery } from "../generated/graphql";
 import { ChartLoader } from "./chartLoader/chartLoader";
 import { Loader } from "./loader/Loader";
@@ -12,10 +13,12 @@ export const LockedContentContainer: React.FC<LockedContentContainerProps> = ({
 }) => {
   const { data, loading } = useMeQuery();
   let body;
-
+  useEffect(() => {
+    console.log("data", data);
+  }, [loading]);
   if (loading) {
     body = <ChartLoader></ChartLoader>;
-  } else if (!data.me && !loading) {
+  } else if (!data?.me?.user && !loading) {
     body = <LockedContent></LockedContent>;
   } else if (data.me) {
     body = children;

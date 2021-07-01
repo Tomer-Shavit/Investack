@@ -23,11 +23,10 @@ export const SidePanel: React.FC<SidePanelProps> = ({}) => {
       <Box>
         <SideBox name="home"></SideBox>
         <OpenSideBox name="portfolio"></OpenSideBox>
-        <SideBox name="news"></SideBox>
-        <SideBox name="notes"></SideBox>
+        <SideBox name="history"></SideBox>
       </Box>
       <Box paddingBottom="64px">
-        <SideBox name="settings"></SideBox>
+        <SideBox name="account"></SideBox>
       </Box>
     </Flex>
   );
