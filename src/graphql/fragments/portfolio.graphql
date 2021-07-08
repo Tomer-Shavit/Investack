@@ -13,4 +13,11 @@ fragment PortfolioSnippet on Portfolio {
     amount
     value
   }
+  transactions {
+    id
+    symbol
+    value
+    createdAt
+    amount
+  }
 }

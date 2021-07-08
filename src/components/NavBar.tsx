@@ -18,7 +18,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
   if (loading) {
     body = null;
-  } else if (!data.me?.user?.email && !loading) {
+  } else if (!data?.me?.user?.email && !loading) {
     body = (
       <Flex justifyContent="space-between">
         <NextLink href="/register">

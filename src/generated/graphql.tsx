@@ -80,6 +80,7 @@ export type Portfolio = {
   userId: Scalars['Float'];
   stocks: Array<Stock>;
   crypto: Array<Crypto>;
+  transactions: Array<Transaction>;
   user: User;
   stocksValue: Scalars['Float'];
   cryptoValue: Scalars['Float'];
@@ -99,6 +100,16 @@ export type Stock = {
   symbol: Scalars['String'];
   amount: Scalars['Float'];
   value: Scalars['Float'];
+};
+
+export type Transaction = {
+  __typename?: 'Transaction';
+  id: Scalars['Float'];
+  portfolioId: Scalars['Float'];
+  symbol: Scalars['String'];
+  value: Scalars['Float'];
+  createdAt: Scalars['String'];
+  amount: Scalars['Float'];
 };
 
 export type User = {
@@ -142,6 +153,9 @@ export type PortfolioSnippetFragment = (
   )>, crypto: Array<(
     { __typename?: 'Crypto' }
     & Pick<Crypto, 'symbol' | 'amount' | 'value'>
+  )>, transactions: Array<(
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'symbol' | 'value' | 'createdAt' | 'amount'>
   )> }
 );
 
@@ -277,6 +291,13 @@ export const PortfolioSnippetFragmentDoc = gql`
     symbol
     amount
     value
+  }
+  transactions {
+    id
+    symbol
+    value
+    createdAt
+    amount
   }
 }
     `;

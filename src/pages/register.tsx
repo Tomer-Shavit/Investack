@@ -29,7 +29,7 @@ const Register: React.FC<registerProps> = ({}) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card>
+      <Card width="25%">
         <Heading fontSize="2xl" color="textDark" marginBottom={2}>
           Sign-Up
         </Heading>
@@ -37,16 +37,30 @@ const Register: React.FC<registerProps> = ({}) => {
           <Formik
             initialValues={{ email: "", password: "", confirmedPassword: "" }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await register({
-                variables: { email: values.email, password: values.password },
-                refetchQueries: [{ query: MeDocument }],
-              });
+              if (values.email.length === 0) {
+                setErrors({
+                  email: "Email can not be blank.",
+                });
+              } else if (values.password.length === 0) {
+                setErrors({
+                  password: "Password can not be blank.",
+                });
+              } else if (values.confirmedPassword.length === 0) {
+                setErrors({
+                  confirmedPassword: "Password can not be blank.",
+                });
+              } else {
+                const response = await register({
+                  variables: { email: values.email, password: values.password },
+                  refetchQueries: [{ query: MeDocument }],
+                });
 
-              if (response.data.register.errors) {
-                setErrors(errorsArrayToMap(response.data.register.errors));
-              }
-              if (response.data.register.user) {
-                router.push("/");
+                if (response.data.register.errors) {
+                  setErrors(errorsArrayToMap(response.data.register.errors));
+                }
+                if (response.data.register.user) {
+                  router.push("/");
+                }
               }
             }}
           >

@@ -23,12 +23,16 @@ const Index = () => {
   ) {
     body = (
       <Flex flexDirection="column" alignItems="center" width="100%" p={8}>
-        <Heading color="textDark" marginBottom={8}>
+        <Heading color="textDark" marginTop={10} marginBottom={10}>
           Lets Get Started
         </Heading>
         <Flex width="70%" justifyContent="space-around" alignItems="center">
           <Card
             pointer
+            hover
+            width="30%"
+            color="bgDark3"
+            height="360px"
             onClick={() => {
               data?.me?.user
                 ? router.push("/crypto/add")
@@ -51,6 +55,10 @@ const Index = () => {
           </Card>
           <Card
             pointer
+            color="bgDark3"
+            hover
+            width="30%"
+            height="360px"
             onClick={() => {
               data?.me?.user
                 ? router.push("/stocks/add")

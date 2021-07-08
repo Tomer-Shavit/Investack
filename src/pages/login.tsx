@@ -18,7 +18,7 @@ const Login = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card>
+      <Card width="25%">
         <Heading fontSize="2xl" color="textDark" marginBottom={2}>
           Log-In
         </Heading>
@@ -26,18 +26,28 @@ const Login = () => {
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await login({
-                variables: { email: values.email, password: values.password },
-                refetchQueries: [{ query: MeDocument }],
-              });
-
-              if (response.data.login.errors) {
+              if (values.email.length === 0) {
                 setErrors({
-                  [response.data.login.errors[0].field]:
-                    response.data.login.errors[0].error,
+                  email: "Email can not be blank.",
                 });
-              } else if (response.data.login.user) {
-                router.push("/");
+              } else if (values.password.length === 0) {
+                setErrors({
+                  password: "Password can not be blank.",
+                });
+              } else {
+                const response = await login({
+                  variables: { email: values.email, password: values.password },
+                  refetchQueries: [{ query: MeDocument }],
+                });
+
+                if (response.data.login.errors) {
+                  setErrors({
+                    [response.data.login.errors[0].field]:
+                      response.data.login.errors[0].error,
+                  });
+                } else if (response.data.login.user) {
+                  router.push("/");
+                }
               }
             }}
           >
